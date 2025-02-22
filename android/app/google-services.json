@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "586889472832",
+    "project_id": "koramapp-52bf8",
+    "storage_bucket": "koramapp-52bf8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586889472832:android:a3cfa9fea86804647e28a5",
+        "android_client_info": {
+          "package_name": "com.koram.app.koramnew"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9TNzd3RehFQoMBvmNO9b9pV4hDa6DkHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
