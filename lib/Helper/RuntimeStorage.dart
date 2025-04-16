@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:koram_app/Models/ChatRoom.dart';
 import 'package:koram_app/Models/User.dart';
-
-
+import 'package:koram_app/Helper/color.dart';
 class RuntimeStorage {
   static final RuntimeStorage instance = RuntimeStorage._internal();
 
@@ -12,9 +11,9 @@ class RuntimeStorage {
   }
   RuntimeStorage._internal();
   bool isLoggedin = false;
-  bool isWeb=false;
-  String chatIndex="0";
-  Color PrimaryOrange = Color(0xFFFF6701);
+  bool isWeb = false;
+  String chatIndex = "0";
+  Color PrimaryOrange = backendColor;
   Map<String, dynamic>? pendingNavigation;
 
   var loggedinUSer;

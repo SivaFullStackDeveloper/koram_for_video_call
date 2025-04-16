@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:koram_app/Screens/DatingDoYouDrink.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:koram_app/Helper/color.dart';
 import '../Helper/CommonDatingWidgets.dart';
 import '../Helper/Helper.dart';
 
@@ -135,59 +135,52 @@ class _DatingYourInterestState extends State<DatingYourInterest> {
                   SizedBox(
                     height: 34,
                   ),
-
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Container(
-                      height: MediaQuery.of(context).size.height/1.6,
+                      height: MediaQuery.of(context).size.height / 1.6,
                       child: SingleChildScrollView(
                         physics: BouncingScrollPhysics(),
                         child: Column(
-
                           children: [
-                            Wrap(
-                                spacing: 12.0,
-                                runSpacing: 12.0,
-
-                                children: [
-                                  for (String i in InterestOptions)
-                                    GestureDetector(
-                                      onTap: (){
-                                        setState(() {
-                                          if(SelectedInterestByUser.contains(i))
-                                          {
-                                            SelectedInterestByUser.remove(i);
-
-                                          }else
-                                          {
-                                            SelectedInterestByUser.add(i);
-
-                                          }
-                                        });
-
-                                      },
-                                      child: Chip(
-                                        shape: RoundedRectangleBorder(
-                                          side: BorderSide(width: 1, color:  SelectedInterestByUser.contains(i)
-                                              ?Color(0xFFFF6701):Color(0xFFF2F2F2)),
-                                          borderRadius: BorderRadius.circular(100),
-                                        ),
-                                        label: Text(i),
-                                        backgroundColor:
-                                            SelectedInterestByUser.contains(i)
-                                                ? Color(0xFFFF6701)
-                                                : Colors.white,
-                                        labelStyle: TextStyle(
-                                          color: SelectedInterestByUser.contains(i)
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontSize: 14,
-                                          fontFamily: 'Helvetica',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
+                            Wrap(spacing: 12.0, runSpacing: 12.0, children: [
+                              for (String i in InterestOptions)
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (SelectedInterestByUser.contains(i)) {
+                                        SelectedInterestByUser.remove(i);
+                                      } else {
+                                        SelectedInterestByUser.add(i);
+                                      }
+                                    });
+                                  },
+                                  child: Chip(
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          width: 1,
+                                          color:
+                                              SelectedInterestByUser.contains(i)
+                                                  ? backendColor
+                                                  : Color(0xFFF2F2F2)),
+                                      borderRadius: BorderRadius.circular(100),
                                     ),
-                                ]),
+                                    label: Text(i),
+                                    backgroundColor:
+                                        SelectedInterestByUser.contains(i)
+                                            ? backendColor
+                                            : Colors.white,
+                                    labelStyle: TextStyle(
+                                      color: SelectedInterestByUser.contains(i)
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Helvetica',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                            ]),
                           ],
                         ),
                       ),
@@ -201,12 +194,14 @@ class _DatingYourInterestState extends State<DatingYourInterest> {
         bottomSheet: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
           child: GestureDetector(
-              onTap: () async{
+              onTap: () async {
                 String uploadUrl = G.HOST + "api/v1/insertDatingDetails";
-                var response =
-                    await http.post(Uri.parse(uploadUrl),body: {"phone_number": G.userPhoneNumber,"insertType":"interest","interest":SelectedInterestByUser.join(",")});
+                var response = await http.post(Uri.parse(uploadUrl), body: {
+                  "phone_number": G.userPhoneNumber,
+                  "insertType": "interest",
+                  "interest": SelectedInterestByUser.join(",")
+                });
                 if (response.statusCode == 200) {
-
                   log("inside success of edit ");
 
                   Navigator.of(context)
@@ -216,9 +211,6 @@ class _DatingYourInterestState extends State<DatingYourInterest> {
                 } else {
                   await CommonDatingWidgets().errorDialog(context);
                 }
-
-
-
               },
               child: Container(
                 width: 350,
@@ -226,7 +218,7 @@ class _DatingYourInterestState extends State<DatingYourInterest> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                 decoration: ShapeDecoration(
-                  color: Color(0xFFFF6701),
+                  color: backendColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -262,7 +254,7 @@ class _DatingYourInterestState extends State<DatingYourInterest> {
               //           padding: const EdgeInsets.symmetric(
               //               horizontal: 10, vertical: 18),
               //           decoration: ShapeDecoration(
-              //             color: Color(0xFFFF6701),
+              //             color: backendColor,
               //             shape: RoundedRectangleBorder(
               //               borderRadius: BorderRadius.circular(12),
               //             ),

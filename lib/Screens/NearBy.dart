@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:koram_app/Helper/Helper.dart';
+import 'package:koram_app/Helper/color.dart';
 import 'package:koram_app/Models/NewUserModel.dart';
 import 'package:koram_app/Models/User.dart';
 import 'package:koram_app/Models/Notification.dart' as N;
@@ -27,10 +28,9 @@ class NearByScreen extends StatefulWidget {
   _NearByScreenState createState() => _NearByScreenState();
 }
 
-
 class _NearByScreenState extends State<NearByScreen> {
   bool switchValue = false;
-  bool isLoading= false;
+  bool isLoading = false;
   List<String> genderList = [
     "Gender",
     "Male",
@@ -41,7 +41,7 @@ class _NearByScreenState extends State<NearByScreen> {
   File? profileImage;
   var lon;
   String genderValue = "Gender";
-  String maxDistance="5000";
+  String maxDistance = "5000";
   List<String> distanceList = [
     "Distance",
     "10 Km",
@@ -49,7 +49,7 @@ class _NearByScreenState extends State<NearByScreen> {
     "30 Km",
     "40 Km",
   ];
-  List<UserDetail>nearByUsers=[];
+  List<UserDetail> nearByUsers = [];
   // double toRadians(double degree) {
   //   // cmath library in C++
   //   // defines the constant
@@ -124,34 +124,28 @@ class _NearByScreenState extends State<NearByScreen> {
   @override
   initState() {
     super.initState();
-    dev.log("inside init of nearBY" );
-    Future.delayed(Duration(seconds: 0)).then((value) async{
+    dev.log("inside init of nearBY");
+    Future.delayed(Duration(seconds: 0)).then((value) async {
       // users = Provider.of<Users>(context).user;
       // friendList = users
       //     .where((element1) => element1.phoneNumber == G.userId)
       //     .toList()[0]
       //     .friendList;
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var isShowYourSelf=prefs.getBool("isShowYourself");
-               if(isShowYourSelf==true && isShowYourSelf!=null)
-               {
-                 await onSwitchToggle();
-               }else
-               {
-                 dev.log("isnide shjow yourself not found or false ");
-               }
-
+      var isShowYourSelf = prefs.getBool("isShowYourself");
+      if (isShowYourSelf == true && isShowYourSelf != null) {
+        await onSwitchToggle();
+      } else {
+        dev.log("isnide shjow yourself not found or false ");
+      }
 
       // profileImage=await G().getImageFile("private");
       var thisUser = G.loggedinUser;
-
-
 
       if (((thisUser.lat ?? 0) != 0) && ((thisUser.lon ?? 0) != 0)) {
         setState(() {
           lat = thisUser.lat;
           lon = thisUser.lon;
-
         });
       }
     });
@@ -201,12 +195,9 @@ class _NearByScreenState extends State<NearByScreen> {
   //   });
   //   dev.log("Usersss List on search ${usersList}");
   // }
-  onSwitchToggle()async
-  {
-    isLoading=true;
-    setState(() {
-
-    });
+  onSwitchToggle() async {
+    isLoading = true;
+    setState(() {});
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Request user to enable location services
@@ -219,29 +210,29 @@ class _NearByScreenState extends State<NearByScreen> {
         Position position = await LocationService().getCurrentLocation();
         lat = position.latitude;
         lon = position.longitude;
-        nearByUsers = await G().getNearBy(position.latitude, position.longitude, maxDistance,genderValue);
+        nearByUsers = await G().getNearBy(
+            position.latitude, position.longitude, maxDistance, genderValue);
         await Provider.of<UsersProviderClass>(context, listen: false)
-            .addLocation(position.latitude,
-            position.longitude);
-        dev.log("The location service is turned on. Nearby users found: ${nearByUsers.length}");
+            .addLocation(position.latitude, position.longitude);
+        dev.log(
+            "The location service is turned on. Nearby users found: ${nearByUsers.length}");
       }
     } else {
-
       switchValue = true;
       Position position = await LocationService().getCurrentLocation();
       lat = position.latitude;
       lon = position.longitude;
-      nearByUsers = await G().getNearBy(position.latitude, position.longitude, maxDistance,genderValue);
+      nearByUsers = await G().getNearBy(
+          position.latitude, position.longitude, maxDistance, genderValue);
       await Provider.of<UsersProviderClass>(context, listen: false)
-          .addLocation(position.latitude,
-          position.longitude);
-      dev.log("The location service is already on. Nearby users found: ${jsonEncode( nearByUsers)}");
+          .addLocation(position.latitude, position.longitude);
+      dev.log(
+          "The location service is already on. Nearby users found: ${jsonEncode(nearByUsers)}");
     }
-    isLoading=false;
-    setState(() {
-
-    });
+    isLoading = false;
+    setState(() {});
   }
+
   List friendList = [];
   String distanceValue = "Distance";
   @override
@@ -249,7 +240,7 @@ class _NearByScreenState extends State<NearByScreen> {
     List<N.Notification> notification =
         Provider.of<N.Notifications>(context).notification;
     UsersProviderClass UserClass =
-    Provider.of<UsersProviderClass>(context, listen: true);
+        Provider.of<UsersProviderClass>(context, listen: true);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     // var us = Provider.of<Users>(context).user;
@@ -281,7 +272,6 @@ class _NearByScreenState extends State<NearByScreen> {
             ),
           ],
         ),
-
         actions: [
           // GestureDetector(
           //     onTap: () async {
@@ -309,8 +299,8 @@ class _NearByScreenState extends State<NearByScreen> {
           const SizedBox(width: 10),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (ctx) => NotificationScreen()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => NotificationScreen()));
               // showModalBottomSheet(
               //     context: context,
               //     elevation: 3,
@@ -325,37 +315,33 @@ class _NearByScreenState extends State<NearByScreen> {
                     child: SvgPicture.asset("assets/notify bell.svg")),
                 value: notification.length),
           ),
-          SizedBox(width: 10,),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx) => NewProfileScreen()));
-            },
-            child:
-            Container(
-              width: 41,
-              child: UserClass.LoggedUser != null &&UserClass.LoggedUser!
-                  .privateProfilePicUrl !=null
-                  ? CircleAvatar(
-                backgroundImage:
-                AssetImage("assets/profile.png"),
-                foregroundImage: CachedNetworkImageProvider(
-                    G.HOST +
-                        "api/v1/images/" +
-                        UserClass.LoggedUser!
-                            .privateProfilePicUrl!),
-                // onForegroundImageError: (){}AssetImage("assets/profile.png"),
-                radius: 60,
-                backgroundColor: Colors.grey[300],
-              )
-                  : CircleAvatar(
-                backgroundImage:
-                AssetImage("assets/profile.png"),
-                radius: 60,
-                backgroundColor: Colors.grey[300],
-              ),
-            )
+          SizedBox(
+            width: 10,
           ),
+          GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => NewProfileScreen()));
+              },
+              child: Container(
+                width: 41,
+                child: UserClass.LoggedUser != null &&
+                        UserClass.LoggedUser!.privateProfilePicUrl != null
+                    ? CircleAvatar(
+                        backgroundImage: AssetImage("assets/profile.png"),
+                        foregroundImage: CachedNetworkImageProvider(G.HOST +
+                            "api/v1/images/" +
+                            UserClass.LoggedUser!.privateProfilePicUrl!),
+                        // onForegroundImageError: (){}AssetImage("assets/profile.png"),
+                        radius: 60,
+                        backgroundColor: Colors.grey[300],
+                      )
+                    : CircleAvatar(
+                        backgroundImage: AssetImage("assets/profile.png"),
+                        radius: 60,
+                        backgroundColor: Colors.grey[300],
+                      ),
+              )),
           SizedBox(
             width: 19,
           ),
@@ -368,12 +354,9 @@ class _NearByScreenState extends State<NearByScreen> {
           //         // margin: EdgeInsets.all(8),
           //         height: 30,
           //         child: Image.asset("assets/Mask Group 1.png"))),
-
         ],
       ),
-      body:
-
-      ListView(
+      body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
           Container(
@@ -414,7 +397,6 @@ class _NearByScreenState extends State<NearByScreen> {
                               fontSize: 14,
                               fontFamily: 'Helvetica',
                               fontWeight: FontWeight.w800,
-
                             ),
                           ),
                         ),
@@ -428,21 +410,19 @@ class _NearByScreenState extends State<NearByScreen> {
                                   switchValue = val;
                                 });
                                 if (val) {
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
                                   prefs.setBool("isShowYourself", true);
                                   await onSwitchToggle();
-
-
                                 } else {
-
-                                  await Provider.of<UsersProviderClass>(context, listen: false)
+                                  await Provider.of<UsersProviderClass>(context,
+                                          listen: false)
                                       .addLocation(0, 0);
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
                                   prefs.setBool("isShowYourself", false);
                                   nearByUsers = [];
-                                  setState(() {
-
-                                  });
+                                  setState(() {});
                                 }
                               }),
                         )
@@ -457,17 +437,14 @@ class _NearByScreenState extends State<NearByScreen> {
                       Container(
                         width: 110,
                         height: 30,
-
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 6),
                         decoration: ShapeDecoration(
                           color: Colors.white,
-
                           shape: RoundedRectangleBorder(
-
-                            side: BorderSide(width: 0.50, color: Color(0xFFF2F2F2)),
+                            side: BorderSide(
+                                width: 0.50, color: Color(0xFFF2F2F2)),
                             borderRadius: BorderRadius.circular(63),
-
                           ),
                           shadows: [
                             BoxShadow(
@@ -479,7 +456,6 @@ class _NearByScreenState extends State<NearByScreen> {
                           ],
                         ),
                         child: DropdownButton(
-
                           underline: SizedBox(),
                           style: TextStyle(
                             color: Color(0xFF707070),
@@ -496,27 +472,28 @@ class _NearByScreenState extends State<NearByScreen> {
                                   child: Text(item),
                                   value: item))
                               .toList(),
-
-                          onChanged: (value) async{
+                          onChanged: (value) async {
                             print("previous ${this.genderValue}");
                             print("selected $value");
                             this.genderValue = value.toString();
                             await onSwitchToggle();
-
                           },
                           value: genderValue,
                         ),
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Container(
                         width: 110,
                         height: 30,
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 6),
                         decoration: ShapeDecoration(
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(width: 0.50, color: Color(0xFFF2F2F2)),
+                            side: BorderSide(
+                                width: 0.50, color: Color(0xFFF2F2F2)),
                             borderRadius: BorderRadius.circular(63),
                           ),
                           shadows: [
@@ -530,7 +507,7 @@ class _NearByScreenState extends State<NearByScreen> {
                         ),
                         child: DropdownButton(
                           underline: SizedBox(),
-                          style:  TextStyle(
+                          style: TextStyle(
                             color: Color(0xFF707070),
                             fontSize: 12,
                             fontFamily: 'Helvetica',
@@ -542,208 +519,215 @@ class _NearByScreenState extends State<NearByScreen> {
                           padding: EdgeInsets.all(0),
                           items: distanceList
                               .map((String item) => DropdownMenuItem<String>(
-                              // enabled: distanceList[0] == item ? false : true,
-                              child: Text(item),
-                              value: item))
+                                  // enabled: distanceList[0] == item ? false : true,
+                                  child: Text(item),
+                                  value: item))
                               .toList(),
-                          onChanged: (value)async {
+                          onChanged: (value) async {
                             this.distanceValue = value.toString();
-                            if(distanceValue!="Distance") {
+                            if (distanceValue != "Distance") {
                               maxDistance =
                                   (distanceList.indexOf(distanceValue) * 10000)
                                       .toString();
-                            }else{
-                              maxDistance="5000";
+                            } else {
+                              maxDistance = "5000";
                             }
-                          await onSwitchToggle();
-
+                            await onSwitchToggle();
                           },
                           value: distanceValue,
-
                         ),
                       ),
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
-           isLoading?
-               Container(child: Center(child: CircularProgressIndicator())):
-           nearByUsers.isEmpty?
-           Center(
-             child: Container(
+          isLoading
+              ? Container(child: Center(child: CircularProgressIndicator()))
+              : nearByUsers.isEmpty
+                  ? Center(
+                      child: Container(
+                        child: Text("No users Found"),
+                      ),
+                    )
+                  : Container(
+                      height: height - 60,
+                      child: ListView.builder(
+                          itemCount: nearByUsers.length,
+                          itemBuilder: (ctx, i) {
+                            var dis;
+                            if (lat != null) {
+                              dis = (Geolocator.distanceBetween(
+                                      lat,
+                                      lon,
+                                      nearByUsers[i].lat ?? 0,
+                                      nearByUsers[i].lon ?? 0)) /
+                                  1000;
+                              dev.log(
+                                  " the distance ${dis.toStringAsFixed(2)}");
+                            } else {
+                              dev.log("isndie the else when lat is empty ");
+                              dis:
+                              null;
+                            }
 
-
-               child: Text("No users Found"),
-             ),
-           ):
-          Container(
-            height: height - 60,
-            child:
-            ListView.builder(
-                itemCount: nearByUsers.length,
-                itemBuilder: (ctx, i) {
-                  var dis;
-                  if(lat!=null)
-                  {
-                    dis = (Geolocator.distanceBetween(
-                        lat, lon, nearByUsers[i].lat ?? 0, nearByUsers[i].lon ?? 0))/1000;
-                    dev.log(" the distance ${dis.toStringAsFixed(2)}");
-                  }else
-                  {
-                    dev.log("isndie the else when lat is empty ");
-                    dis:null;
-                  }
-
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          G.HOST + "api/v1/images/" + nearByUsers[i].publicProfilePicUrl!),
-                    ),
-                    title: Text(nearByUsers[i].publicName??""),
-                    subtitle:dis!=null ? Text("${dis.toStringAsFixed(2)} km"):SizedBox(),
-                    trailing: Container(
-                      width: 200,
-                      child: nearByUsers[i] == G.userPhoneNumber
-                          ? Container()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                    onPressed: () async {
-                                      await Provider.of<N.Notifications>(
-                                              context,
-                                              listen: false)
-                                          .addNotification("Hello",
-                                          nearByUsers[i].phoneNumber!, G.userPhoneNumber);
-                                      // SnackBar
-                                    },
-                                    child: Text(
-                                      "Say Hello",
-                                      style: TextStyle(
-                                          decoration: TextDecoration.underline),
-                                    )),
-                                GestureDetector(
-                                  onTap: () {
-                                    String txt = "";
-                                    showDialog(
-                                        context: context,
-                                        builder: (ctx) => Dialog(
-                                              child: Container(
-                                                height: 200,
-                                                width: 100,
-                                                child: Column(
-                                                  children: [
-                                                    Text("Send Message"),
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.grey)),
-                                                      margin:
-                                                          EdgeInsets.all(8.0),
-                                                      child: TextField(
-                                                        onChanged: (c) {
-                                                          txt = c;
-                                                        },
-                                                        maxLines: 6,
-                                                        decoration: InputDecoration
-                                                            .collapsed(
-                                                                hintText:
-                                                                    "Write here"),
-                                                      ),
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () async {
-                                                        await Provider.of<
-                                                                    N.Notifications>(
-                                                                context,
-                                                                listen: false)
-                                                            .addNotification(
-                                                                txt,
-                                                                nearByUsers[i]
-                                                                    .phoneNumber!,
-                                                                G.userPhoneNumber);
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        // SnackBar
-                                                      },
-                                                      child: Container(
-                                                          width: 70,
-                                                          height: 30,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                  boxShadow: [
-                                                                    BoxShadow(
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(G.HOST +
+                                    "api/v1/images/" +
+                                    nearByUsers[i].publicProfilePicUrl!),
+                              ),
+                              title: Text(nearByUsers[i].publicName ?? ""),
+                              subtitle: dis != null
+                                  ? Text("${dis.toStringAsFixed(2)} km")
+                                  : SizedBox(),
+                              trailing: Container(
+                                width: 200,
+                                child: nearByUsers[i] == G.userPhoneNumber
+                                    ? Container()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextButton(
+                                              onPressed: () async {
+                                                await Provider.of<
+                                                            N.Notifications>(
+                                                        context,
+                                                        listen: false)
+                                                    .addNotification(
+                                                        "Hello",
+                                                        nearByUsers[i]
+                                                            .phoneNumber!,
+                                                        G.userPhoneNumber);
+                                                // SnackBar
+                                              },
+                                              child: Text(
+                                                "Say Hello",
+                                                style: TextStyle(
+                                                    decoration: TextDecoration
+                                                        .underline),
+                                              )),
+                                          GestureDetector(
+                                            onTap: () {
+                                              String txt = "";
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (ctx) => Dialog(
+                                                        child: Container(
+                                                          height: 200,
+                                                          width: 100,
+                                                          child: Column(
+                                                            children: [
+                                                              Text(
+                                                                  "Send Message"),
+                                                              Container(
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5),
+                                                                    border: Border.all(
                                                                         color: Colors
-                                                                            .grey
-                                                                            .shade200,
-                                                                        spreadRadius:
-                                                                            4,
-                                                                        offset: Offset(
-                                                                            2,
-                                                                            3),
-                                                                        blurRadius:
-                                                                            2)
-                                                                  ],
-                                                                  color: Colors
-                                                                      .orange),
-                                                          child: Center(
-                                                              child: Text(
-                                                            "Send",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 10),
-                                                          ))),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ));
-                                  },
-                                  child: Container(
-                                      width: 100,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border:
-                                              Border.all(color: Colors.orange),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Colors.grey.shade200,
-                                                spreadRadius: 4,
-                                                offset: Offset(2, 3),
-                                                blurRadius: 2)
-                                          ],
-                                          color: Colors.white),
-                                      child: Center(
-                                          child: Text(
-                                        "Custom Message",
-                                        style: TextStyle(
-                                            color: Colors.orange, fontSize: 10),
-                                      ))),
-                                ),
-                              ],
-                            ),
-                    ),
-                  );
-                }),
-          )
+                                                                            .grey)),
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                                child:
+                                                                    TextField(
+                                                                  onChanged:
+                                                                      (c) {
+                                                                    txt = c;
+                                                                  },
+                                                                  maxLines: 6,
+                                                                  decoration: InputDecoration
+                                                                      .collapsed(
+                                                                          hintText:
+                                                                              "Write here"),
+                                                                ),
+                                                              ),
+                                                              GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  await Provider.of<
+                                                                              N
+                                                                              .Notifications>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .addNotification(
+                                                                          txt,
+                                                                          nearByUsers[i]
+                                                                              .phoneNumber!,
+                                                                          G.userPhoneNumber);
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                  // SnackBar
+                                                                },
+                                                                child: Container(
+                                                                    width: 70,
+                                                                    height: 30,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(20),
+                                                                        boxShadow: [
+                                                                          BoxShadow(
+                                                                              color: Colors.grey.shade200,
+                                                                              spreadRadius: 4,
+                                                                              offset: Offset(2, 3),
+                                                                              blurRadius: 2)
+                                                                        ],
+                                                                        color: Colors.orange),
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                      "Send",
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontSize:
+                                                                              10),
+                                                                    ))),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ));
+                                            },
+                                            child: Container(
+                                                width: 100,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    border: Border.all(
+                                                        color: backendColor),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade200,
+                                                          spreadRadius: 4,
+                                                          offset: Offset(2, 3),
+                                                          blurRadius: 2)
+                                                    ],
+                                                    color: Colors.white),
+                                                child: Center(
+                                                    child: Text(
+                                                  "Custom Message",
+                                                  style: TextStyle(
+                                                      color: backendColor,
+                                                      fontSize: 10),
+                                                ))),
+                                          ),
+                                        ],
+                                      ),
+                              ),
+                            );
+                          }),
+                    )
         ],
       ),
     );
   }
-
-
 }

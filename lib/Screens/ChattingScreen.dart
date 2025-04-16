@@ -15,6 +15,7 @@ import 'package:koram_app/Helper/CallSocketServices.dart';
 import 'package:koram_app/Helper/ConnectivityProviderService.dart';
 import 'package:koram_app/Helper/DBHelper.dart';
 import 'package:koram_app/Helper/Helper.dart';
+import 'package:koram_app/Helper/color.dart';
 import 'package:koram_app/Models/ChatRoom.dart';
 import 'package:koram_app/Models/NewUserModel.dart';
 import 'package:path/path.dart' as path;
@@ -83,19 +84,18 @@ class _ChattingScreenState extends State<ChattingScreen>
     }
     PvtMessageShowOnScreen = await DBProvider.db.getPrivateMessageByPhone(
         widget.otherUserDetail?.phoneNumber ?? widget.otherUserNumber!);
-    PvtMessageShowOnScreen.where((e)=>e.isSeen==false);
-    List<PrivateMessage>convertedList=PvtMessageShowOnScreen;
+    PvtMessageShowOnScreen.where((e) => e.isSeen == false);
+    List<PrivateMessage> convertedList = PvtMessageShowOnScreen;
 
-    for(int i=0;i<PvtMessageShowOnScreen.length;i++)
-    {
-      if(PvtMessageShowOnScreen[i].isSeen==false)
-      {   log("orivate mwessage with seen false ${PvtMessageShowOnScreen[i].message} ");
-        convertedList[i].isSeen= true;
+    for (int i = 0; i < PvtMessageShowOnScreen.length; i++) {
+      if (PvtMessageShowOnScreen[i].isSeen == false) {
+        log("orivate mwessage with seen false ${PvtMessageShowOnScreen[i].message} ");
+        convertedList[i].isSeen = true;
       }
-
     }
-  PvtMessageShowOnScreen=convertedList;
-    var res=await DBProvider.db.updateListMessageIsSeen(widget.otherUserDetail!.phoneNumber??widget.otherUserNumber!);
+    PvtMessageShowOnScreen = convertedList;
+    var res = await DBProvider.db.updateListMessageIsSeen(
+        widget.otherUserDetail!.phoneNumber ?? widget.otherUserNumber!);
 
     _scrollToBottom();
     setState(() {});
@@ -139,7 +139,7 @@ class _ChattingScreenState extends State<ChattingScreen>
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Cropper',
-          toolbarColor: Colors.deepOrange,
+          toolbarColor: backendColor,
           toolbarWidgetColor: Colors.white,
           initAspectRatio: CropAspectRatioPreset.square,
           lockAspectRatio: false,
@@ -679,7 +679,16 @@ class _ChattingScreenState extends State<ChattingScreen>
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar:PreferredSize(
+    preferredSize: Size.fromHeight(60.0),
+    child: GestureDetector(
+      onTap: () {
+        print("AppBar tapped!");
+        setState(() {
+          displayOptions = false;
+        });
+      },
+      child:  AppBar(
         elevation: 0.5,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
@@ -704,7 +713,7 @@ class _ChattingScreenState extends State<ChattingScreen>
                       height: 40,
                       width: 40,
                       child: CommanWidgets().cacheProfileDisplay(
-                          widget.otherUserDetail!.publicProfilePicUrl!),
+                          widget.otherUserDetail!.publicProfilePicUrl!??"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
                     )
 
                     // CachedNetworkImage(imageUrl: G.HOST +
@@ -751,6 +760,9 @@ class _ChattingScreenState extends State<ChattingScreen>
         actions: [
           GestureDetector(
               onTap: () async {
+                 setState(() {
+                              displayOptions = false;
+                            });
                 try {
                   log("inside try of the phone call navigation");
                   if (_isProcessingCAll) return; // Prevent multiple taps
@@ -789,6 +801,9 @@ class _ChattingScreenState extends State<ChattingScreen>
           ),
           GestureDetector(
               onTap: () async {
+                setState(() {
+                              displayOptions = false;
+                            });
                 try {
                   log("inside try of the phone call navigation");
                   if (_isProcessingCAll) return; // Prevent multiple taps
@@ -849,7 +864,7 @@ class _ChattingScreenState extends State<ChattingScreen>
           //   width: 10,
           // ),
         ],
-      ),
+      ),)),
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Stack(
@@ -857,7 +872,10 @@ class _ChattingScreenState extends State<ChattingScreen>
             Positioned.fill(
               child: GestureDetector(
                 onTap: () {
-                  displayOptions = false;
+     
+                  setState(() {
+                              displayOptions = false;
+                            });
                 },
                 child: ListView.builder(
                     physics: BouncingScrollPhysics(),
@@ -984,7 +1002,7 @@ class _ChattingScreenState extends State<ChattingScreen>
                               width: 57.58,
                               height: 42.35,
                               decoration: ShapeDecoration(
-                                color: Color(0xFFFF6701),
+                                color: backendColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(22.44),
                                 ),

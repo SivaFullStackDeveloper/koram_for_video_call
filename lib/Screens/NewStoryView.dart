@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -352,7 +352,7 @@ class _NewStoryViewState extends State<NewStoryView> {
                                             width: 36,
                                             height: 36,
                                             decoration: new BoxDecoration(
-                                              // color: Colors.orange,
+                                              // color: backendColor,
                                               shape: BoxShape.circle,
                                             ),
                                             child: Image.asset(
@@ -387,7 +387,7 @@ class _NewStoryViewState extends State<NewStoryView> {
                           //       width: 36,
                           //       height: 36,
                           //       decoration: new BoxDecoration(
-                          //         // color: Colors.orange,
+                          //         // color: backendColor,
                           //         shape: BoxShape.circle,
                           //       ),
                           //       child: Image.asset("assets/Mumbai.png")),
@@ -446,7 +446,7 @@ class _NewStoryViewState extends State<NewStoryView> {
                                   width: 57.58,
                                   height: 42.35,
                                   decoration: ShapeDecoration(
-                                    color: Color(0xFFFF6701),
+                                    color: backendColor,
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(22.44),
@@ -469,7 +469,7 @@ class _NewStoryViewState extends State<NewStoryView> {
                               //     // width: 57.58,
                               //     // height: 42.35,
                               //     decoration: ShapeDecoration(
-                              //       color: Color(0xFFFF6701),
+                              //       color: backendColor,
                               //       shape: RoundedRectangleBorder(
                               //         borderRadius: BorderRadius.circular(22.44),
                               //       ),

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
@@ -135,7 +135,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                       TextSpan(
                                         text: 'OTP',
                                         style: TextStyle(
-                                          color: Color(0xFFFF6701),
+                                          color: backendColor,
                                           fontSize: 24,
                                           fontFamily: 'Helvetica',
                                           fontWeight: FontWeight.w700,
@@ -201,7 +201,10 @@ class _OtpScreenState extends State<OtpScreen> {
                                 widget.callBackInitialize();
                                 Navigator.of(context).pop();
                               },
-                              child: SvgPicture.asset("assets/Edit.svg"))
+                              child: SvgPicture.asset(
+                                "assets/Edit.svg",
+                                color: backendColor,
+                              ))
                         ],
                       ),
 
@@ -231,7 +234,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             // decoration: UnderlineDecoration(),
                             codeLength: 4,
                             cursor: Cursor(
-                              color: Colors.orange,
+                              color: backendColor,
                               width: 10,
                               height: 3,
                               enabled: true,
@@ -353,7 +356,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       //           },
                       //           child: Text(
                       //             "Resend",
-                      //             style: TextStyle(color: Colors.orange),
+                      //             style: TextStyle(color: backendColor),
                       //           ))
                       //     ],
                       //   ),
@@ -373,7 +376,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       //           },
                       //           child: Text(
                       //             "Change Number",
-                      //             style: TextStyle(color: Colors.orange),
+                      //             style: TextStyle(color: backendColor),
                       //           ))
                       //     ],
                       //   ),
@@ -443,7 +446,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             // padding: const EdgeInsets.symmetric(
                             //     horizontal: 10, vertical: 18),
                             decoration: ShapeDecoration(
-                              color: Color(0xFFFF6701),
+                              color: backendColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -510,7 +513,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   //           : Text("Verify"),
                   //       style: TextButton.styleFrom(
                   //           primary: Colors.white,
-                  //           backgroundColor: Colors.orangeAccent,
+                  //           backgroundColor: backendColorAccent,
                   //           shape: RoundedRectangleBorder(
                   //               borderRadius: BorderRadius.circular(20)))),
                   // ),

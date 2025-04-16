@@ -10,11 +10,12 @@ import 'package:koram_app/Helper/RuntimeStorage.dart';
 import 'package:koram_app/Screens/LoginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:koram_app/Helper/color.dart';
 import '../Helper/Helper.dart';
 import '../Models/MenuOption.dart';
 import '../Models/NewUserModel.dart';
 import '../Models/User.dart';
+
 import 'PrivateProfileScreen.dart';
 import 'PublicProfileScreen.dart';
 
@@ -37,7 +38,6 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
   FocusNode searchFocusNode = FocusNode();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -125,8 +125,8 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
   Widget build(BuildContext context) {
     UsersProviderClass UserPro =
         Provider.of<UsersProviderClass>(context, listen: true);
-    UserDetail? loggedUser=UserPro.LoggedUser;
-    userData=loggedUser!;
+    UserDetail? loggedUser = UserPro.LoggedUser;
+    userData = loggedUser!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: isSearchClicked
@@ -214,8 +214,11 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                     // width: 22,
                     // height: 22,
                     decoration: BoxDecoration(),
-                    child:
-                        Container(child: SvgPicture.asset("assets/Vector.svg")),
+                    child: Container(
+                        child: SvgPicture.asset(
+                      "assets/Vector.svg",
+                      color: backendColor,
+                    )),
                   ),
                 ),
                 const SizedBox(width: 15),
@@ -244,32 +247,28 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                             width: 74.57,
                             height: 74.57,
 
-                            child:  G.loggedinUser.privateProfilePicUrl != null
-                                ?
-
-                            ClipOval(
-                              child: CachedNetworkImage(
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, progress) =>
-                                    Center(
-                                      child:
-                                      CircularProgressIndicator(
-                                        value: progress.progress,
+                            child: G.loggedinUser.privateProfilePicUrl != null
+                                ? ClipOval(
+                                    child: CachedNetworkImage(
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                      progressIndicatorBuilder:
+                                          (context, url, progress) => Center(
+                                        child: CircularProgressIndicator(
+                                          value: progress.progress,
+                                          color: backendColor,
+                                        ),
                                       ),
+                                      imageUrl: G.HOST +
+                                          "api/v1/images/" +
+                                          loggedUser!.privateProfilePicUrl!,
                                     ),
-                                imageUrl: G.HOST +
-                                    "api/v1/images/" +
-                                    loggedUser
-                                        !.privateProfilePicUrl!,
-                              ),
-                            )
-                            // CachedNetworkImage(imageUrl:  G.HOST +
-                            //     "api/v1/images/" +
-                            //     G.loggedinUser.privateProfilePicUrl!,
-                            //         filterQuality: FilterQuality.low,)
+                                  )
+                                // CachedNetworkImage(imageUrl:  G.HOST +
+                                //     "api/v1/images/" +
+                                //     G.loggedinUser.privateProfilePicUrl!,
+                                //         filterQuality: FilterQuality.low,)
                                 : CircleAvatar(
                                     backgroundImage:
                                         AssetImage("assets/profile.png"),
@@ -290,7 +289,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                             width: 24.56,
                             height: 24.56,
                             decoration: ShapeDecoration(
-                              color: Color(0xFFFF6701),
+                              color: backendColor,
                               shape: OvalBorder(),
                             ),
                           ),
@@ -316,7 +315,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${loggedUser?.privateName??""}',
+                        '${loggedUser?.privateName ?? ""}',
                         style: TextStyle(
                           color: Color(0xFF303030),
                           fontSize: 16,
@@ -381,7 +380,10 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                 height: 20,
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(),
-                child: SvgPicture.asset(imgUrl)),
+                child: SvgPicture.asset(
+                  imgUrl,
+                  color: backendColor,
+                )),
             SizedBox(width: 14),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

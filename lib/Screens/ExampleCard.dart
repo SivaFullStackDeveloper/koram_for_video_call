@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:koram_app/Helper/RuntimeStorage.dart';
-
+import 'package:koram_app/Helper/color.dart';
 import '../Helper/Helper.dart';
 import 'bottomButtonRow.dart';
 
@@ -102,7 +102,7 @@ class ExampleCard extends StatelessWidget {
                               decoration: ShapeDecoration(
                                 image: DecorationImage(
                                     image: AssetImage("assets/love.png")),
-                                color: Color(0xFFFF6701),
+                                color: backendColor,
                                 shape: OvalBorder(),
                               ),
                               // child: SvgPicture.asset(
@@ -118,7 +118,7 @@ class ExampleCard extends StatelessWidget {
                                 image: DecorationImage(
                                     image: AssetImage(
                                         "assets/star-inside-circle.png")),
-                                color: Color(0xFFFF6701),
+                                color: backendColor,
                                 shape: OvalBorder(),
                               ),
                               // child: SvgPicture.asset(

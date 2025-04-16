@@ -157,7 +157,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
     }));
     prefs.setStringList("call_history", callHistory);
     RTCSessionDescription description =
-    await _peerConnection.createOffer({'offerToReceiveVideo': 1});
+        await _peerConnection.createOffer({'offerToReceiveVideo': 1});
     var session = parse(description.sdp!);
     print(json.encode(session));
 
@@ -189,7 +189,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
 
   void _createAnswer() async {
     RTCSessionDescription description =
-    await _peerConnection.createAnswer({'offerToReceiveVideo': 1});
+        await _peerConnection.createAnswer({'offerToReceiveVideo': 1});
 
     var session = parse(description.sdp!);
     print(json.encode(session));
@@ -260,7 +260,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
     _localStream = await _getUserMedia();
 
     RTCPeerConnection pc =
-    await createPeerConnection(configuration, offerSdpConstraints);
+        await createPeerConnection(configuration, offerSdpConstraints);
     // if (pc != null) print(pc);
     pc.addStream(_localStream);
 
@@ -308,7 +308,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
     String sdp = write(session, null);
 
     RTCSessionDescription description =
-    new RTCSessionDescription(sdp, _offer ? 'answer' : 'offer');
+        new RTCSessionDescription(sdp, _offer ? 'answer' : 'offer');
     print(description.toMap());
 
     await _peerConnection.setRemoteDescription(description);
@@ -363,7 +363,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
             //         : Container(
             //             height: MediaQuery.of(context).size.height,
             //             width: MediaQuery.of(context).size.width,
-            //             color: Colors.orange,
+            //             color: backendColor,
             //           )),
             Positioned(
                 top: 100,
@@ -376,10 +376,10 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                         Text(calling == null
                             ? "Getting Call"
                             : calling
-                            ? "Calling"
-                            : connected
-                            ? "Connected"
-                            : "Connecting"),
+                                ? "Calling"
+                                : connected
+                                    ? "Connected"
+                                    : "Connecting"),
                         Text(widget.caller),
                       ],
                     ))),
@@ -424,8 +424,8 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                           GestureDetector(
                             onTap: incoming
                                 ? () async {
-                              _createAnswer();
-                            }
+                                    _createAnswer();
+                                  }
                                 : _createOffer,
                             child: CircleAvatar(
                                 radius: 30,

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:koram_app/Helper/color.dart';
 import '../Helper/CommonDatingWidgets.dart';
 import '../Helper/Helper.dart';
 import 'DatingRelegion.dart';
@@ -23,15 +23,15 @@ class _DatingEducationState extends State<DatingEducation> {
     'Undergraduate degree',
     'I’m a postgraduate',
     'Postgraduate degree'
-
   ];
   var SelectedEducation;
   @override
   void initState() {
-    SelectedEducation =  "Sixth form";
+    SelectedEducation = "Sixth form";
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -116,7 +116,7 @@ class _DatingEducationState extends State<DatingEducation> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               setState(() {
                                 SelectedEducation = i;
                               });
@@ -140,8 +140,8 @@ class _DatingEducationState extends State<DatingEducation> {
                               //   ),
                               // ),
                               child: Padding(
-                                padding:
-                                const EdgeInsets.only(left: 24.0, right: 24),
+                                padding: const EdgeInsets.only(
+                                    left: 24.0, right: 24),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -150,7 +150,7 @@ class _DatingEducationState extends State<DatingEducation> {
                                       '$i',
                                       style: TextStyle(
                                         color: SelectedEducation == i
-                                            ? Color(0xFFFF6701)
+                                            ? backendColor
                                             : Colors.black,
                                         fontSize: 14,
                                         fontFamily: 'Helvetica',
@@ -173,7 +173,6 @@ class _DatingEducationState extends State<DatingEducation> {
                             ),
                           ),
                         ),
-
                     ],
                   )
                 ],
@@ -184,13 +183,14 @@ class _DatingEducationState extends State<DatingEducation> {
         bottomSheet: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
           child: GestureDetector(
-              onTap: ()async {
-
+              onTap: () async {
                 String uploadUrl = G.HOST + "api/v1/insertDatingDetails";
-                var response =
-                    await http.post(Uri.parse(uploadUrl),body: {"phone_number": G.userPhoneNumber,"insertType":"education","education":SelectedEducation});
+                var response = await http.post(Uri.parse(uploadUrl), body: {
+                  "phone_number": G.userPhoneNumber,
+                  "insertType": "education",
+                  "education": SelectedEducation
+                });
                 if (response.statusCode == 200) {
-
                   log("inside success of edit ");
 
                   Navigator.of(context)
@@ -200,15 +200,14 @@ class _DatingEducationState extends State<DatingEducation> {
                 } else {
                   await CommonDatingWidgets().errorDialog(context);
                 }
-
               },
               child: Container(
                 width: 350,
                 height: 54,
                 padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                 decoration: ShapeDecoration(
-                  color: Color(0xFFFF6701),
+                  color: backendColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -231,10 +230,7 @@ class _DatingEducationState extends State<DatingEducation> {
                     ),
                   ],
                 ),
-              )
-
-
-          ),
+              )),
         ),
       ),
     );

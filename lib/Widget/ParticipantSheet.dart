@@ -85,7 +85,7 @@
 //                       },
 //                       child: Icon(
 //                         Icons.close,
-//                         color: Colors.orange,
+//                         color: backendColor,
 //                         size: 30,
 //                       ),
 //                     ),
@@ -228,7 +228,7 @@
 //                                               borderRadius:
 //                                                   BorderRadius.circular(20),
 //                                               border: Border.all(
-//                                                   color: Colors.orange),
+//                                                   color: backendColor),
 //                                               boxShadow: [
 //                                                 BoxShadow(
 //                                                     color: Colors.grey.shade200,
@@ -241,7 +241,7 @@
 //                                               child: Text(
 //                                             "Custom Message",
 //                                             style: TextStyle(
-//                                                 color: Colors.orange,
+//                                                 color: backendColor,
 //                                                 fontSize: 10),
 //                                           ))),
 //                                     ),

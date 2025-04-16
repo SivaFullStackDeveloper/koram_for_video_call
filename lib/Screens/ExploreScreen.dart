@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -238,16 +238,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ],
                 ),
           body: isExploreSearchClicked
-              ? Column(
-                  children:[
-                    Padding(
+              ? Column(children: [
+                  Padding(
                     padding: EdgeInsets.all(20),
-                    child:
-                    ListView.builder(
-                      
+                    child: ListView.builder(
                       itemCount: allRoomCopy.length,
-                      itemBuilder: (ctx,index)
-                      {
+                      itemBuilder: (ctx, index) {
                         return RoomRow(allRoomCopy[index], ProChatrooms);
                       },
                     ),
@@ -257,8 +253,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     //   ],
                     // ),
                   ),
-                  ]
-                )
+                ])
               : ListView(
                   physics: BouncingScrollPhysics(),
                   children: [
@@ -275,38 +270,37 @@ class _ExploreScreenState extends State<ExploreScreen> {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              content: Text(
-                  "Join ${r.name} room"),
-              actions: [
-                TextButton(
-                    onPressed: () async {
-                      ProChat.updateChatroom(r);
-                      setState(() {
-                        chatElementItemSelected = !chatElementItemSelected;
-                      });
-                      // Navigator.of(context).push(
-                      //     MaterialPageRoute(builder: (ctx) => ChatRoomScreenChat(groupName: r)));
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      await prefs.setBool('isJoinedRoom', true);
-                      await prefs.setString("JoinedRoomId", r.id.toString());
-                      await prefs.setString("JoinedRoomName", r.name.toString());
+                  content: Text("Join ${r.name} room"),
+                  actions: [
+                    TextButton(
+                        onPressed: () async {
+                          ProChat.updateChatroom(r);
+                          setState(() {
+                            chatElementItemSelected = !chatElementItemSelected;
+                          });
+                          // Navigator.of(context).push(
+                          //     MaterialPageRoute(builder: (ctx) => ChatRoomScreenChat(groupName: r)));
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setBool('isJoinedRoom', true);
+                          await prefs.setString(
+                              "JoinedRoomId", r.id.toString());
+                          await prefs.setString(
+                              "JoinedRoomName", r.name.toString());
 
-                      RuntimeStorage.instance.selectedRoom = r;
-                      widget.change();
-                      Navigator.pop(context);
-                    },
-                    child: Text("Yes")),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(
-                          context);
-                      return;
-                    },
-                    child: Text("No"))
-              ],
-            ));
-
-
+                          RuntimeStorage.instance.selectedRoom = r;
+                          widget.change();
+                          Navigator.pop(context);
+                        },
+                        child: Text("Yes")),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          return;
+                        },
+                        child: Text("No"))
+                  ],
+                ));
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
@@ -344,7 +338,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 width: 36,
                 height: 36,
                 decoration: new BoxDecoration(
-                  // color: Colors.orange,
+                  // color: backendColor,
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset("assets/Mumbai.png")),
@@ -476,7 +470,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 width: 36,
                 height: 36,
                 decoration: new BoxDecoration(
-                  // color: Colors.orange,
+                  // color: backendColor,
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset("assets/Mumbai.png")),
@@ -568,7 +562,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 width: 36,
                 height: 36,
                 decoration: new BoxDecoration(
-                  // color: Colors.orange,
+                  // color: backendColor,
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset("assets/Ind_Flag.png")),
@@ -716,7 +710,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                             width: 36,
                                             height: 36,
                                             decoration: new BoxDecoration(
-                                              // color: Colors.orange,
+                                              // color: backendColor,
                                               shape: BoxShape.circle,
                                             ),
                                             child: Image.asset(
@@ -967,7 +961,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
                                   color: chatElementItemSelected
-                                      ? Colors.orange
+                                      ? backendColor
                                       : Colors.black))),
                     ),
                     Positioned(
@@ -1000,7 +994,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                                 color: chatElementItemSelected
-                                    ? Colors.orange
+                                    ? backendColor
                                     : Colors.black),
                           ),
                           child: ListTile(
@@ -1023,7 +1017,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                 // height: 50,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
-                                    color: Colors.orange.shade100),
+                                    color: backendColor),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -1031,7 +1025,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                     Text("Join Now"),
                                     Icon(
                                       Icons.chevron_right,
-                                      color: Colors.orange,
+                                      color: backendColor,
                                     )
                                   ],
                                 ),

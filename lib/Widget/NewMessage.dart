@@ -8,7 +8,7 @@ import 'package:koram_app/Models/ChatRoom.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -371,53 +371,43 @@ class _NewMessageState extends State<NewMessage> {
                           bottom: 0,
                           right: 0,
                           child: Container(
-                                 width: 60,
-                              height: 30,
-                              decoration: BoxDecoration(
+                            width: 60,
+                            height: 30,
+                            decoration: BoxDecoration(
 
                                 // color: Color(
                                 //     0xFFFF6701), // Semi-transparent color for the glass effect
                                 // borderRadius: BorderRadius.circular(
                                 //     12), // Rounded corners for better aesthetics
-                              ),
-                              child:  ClipRect(
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                      sigmaX: 10.0,
-                                      sigmaY: 10.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize
-                                        .min, // Ensure the row takes only the space it needs
-                                    // crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 4),
-                                        child: Text(
-                                          formattedTime,
-                                          textAlign: TextAlign.end,
-                                          style: TextStyle(
-                                            color: Color(0xFFFFEADC),
-                                            fontSize: 10,
-                                            fontFamily: 'Helvetica',
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                                ),
+                            child: ClipRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                    sigmaX: 10.0, sigmaY: 10.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize
+                                      .min, // Ensure the row takes only the space it needs
+                                  // crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 4),
+                                      child: Text(
+                                        formattedTime,
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          color: Color(0xFFFFEADC),
+                                          fontSize: 10,
+                                          fontFamily: 'Helvetica',
+                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
-                                      widget.messageData.messageStatus == "read"
-                                          ? SvgPicture.asset("assets/blueTick.svg")
-                                          : widget.messageData.messageStatus == "sent"
-                                          ? SvgPicture.asset(
-                                          "assets/whiteTick.svg")
-                                          : SvgPicture.asset(
-                                        "assets/messageNotSent.svg",
-                                        width: 13,
-                                        color: Colors.white,
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                    getMessageStatusIcon(widget.messageData),
+                                  ],
                                 ),
                               ),
+                            ),
                           ))
                     ],
                   )),
@@ -546,7 +536,7 @@ class _NewMessageState extends State<NewMessage> {
                         padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
                         // margin: EdgeInsets.only(right: 20, bottom: 4),
                         decoration: ShapeDecoration(
-                          color: Color(0xFFFF6701),
+                          color: backendColor,
                           shadows: [Shadoww],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
@@ -595,16 +585,22 @@ class _NewMessageState extends State<NewMessage> {
                                     ),
                                   ),
                                 ),
-                                widget.messageData.messageStatus == "read"
-                                    ? SvgPicture.asset("assets/blueTick.svg")
-                                    : widget.messageData.messageStatus == "sent"
-                                        ? SvgPicture.asset(
-                                            "assets/whiteTick.svg")
-                                        : SvgPicture.asset(
-                                            "assets/messageNotSent.svg",
-                                            width: 13,
-                                            color: Colors.white,
-                                          )
+                                //  _buildMessageStatusIcon(
+                                //   widget.messageData.messageStatus),
+                                // widget.messageData.isDelivered.toString() ==
+                                //         "false"
+                                //     ? Icon(
+                                //         Icons.check,
+                                //         color: Colors.white,
+                                //       )
+                                //     : Container(),
+                                // widget.messageData.messageStatus == "read"
+                                //     ? SvgPicture.asset("assets/blueTick.svg")
+                                //     : widget.messageData.messageStatus == "sent"
+                                //         ? SvgPicture.asset(
+                                //             "assets/whiteTick.svg")
+                                //         :
+                                getMessageStatusIcon(widget.messageData),
                               ],
                             ),
                             // Positioned(
@@ -848,5 +844,31 @@ class _NewMessageState extends State<NewMessage> {
               ],
             ),
           );
+  }
+
+  Widget getMessageStatusIcon(PrivateMessage messageData) {
+    print(messageData);
+    if (messageData.messageStatus == "notSent") {
+      return SvgPicture.asset(
+        "assets/messageNotSent.svg",
+        width: 13,
+        color: Colors.white,
+      );
+    }
+
+    if (messageData.isSeen == true || messageData.messageStatus == "read") {
+      return SvgPicture.asset("assets/blueTick.svg",color: Colors.white,); // read
+    }
+
+    if (messageData.isDelivered == true) {
+      return SvgPicture.asset("assets/whiteTick.svg"); // delivered/sent
+    }
+
+    if (messageData.isDelivered == false) {
+      return SvgPicture.asset("assets/whiteTick.svg"); // delivered/sent
+    }
+
+    return Icon(Icons.access_time,
+        size: 14, color: Colors.white); // sending / fallback
   }
 }

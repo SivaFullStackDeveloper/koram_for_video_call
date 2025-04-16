@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:koram_app/Helper/color.dart';
 import '../Helper/Helper.dart';
 import 'DatingBirthDay.dart';
 
@@ -212,11 +212,12 @@ class _DatingPhotosState extends State<DatingPhotos> {
         bottomSheet: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
           child: isCallingApi
-              ? Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                ],
-              )
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                  ],
+                )
               : GestureDetector(
                   onTap: () async {
                     checkIsUpload();
@@ -231,7 +232,8 @@ class _DatingPhotosState extends State<DatingPhotos> {
                           'files', _selectedImage1!.path));
                       request.files.add(await http.MultipartFile.fromPath(
                           'files', _selectedImage2!.path));
-                      request.fields['userPhoneNumber'] = '${G.userPhoneNumber}';
+                      request.fields['userPhoneNumber'] =
+                          '${G.userPhoneNumber}';
                       var response = await request.send();
 
                       if (response.statusCode == 200 ||
@@ -297,7 +299,7 @@ class _DatingPhotosState extends State<DatingPhotos> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 18),
                       decoration: ShapeDecoration(
-                        color: Color(0xFFFF6701),
+                        color: backendColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

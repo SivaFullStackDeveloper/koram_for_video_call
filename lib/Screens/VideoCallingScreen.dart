@@ -23,7 +23,7 @@ class VideoCallingScreen extends StatefulWidget {
       {required this.callTo,
       required this.caller,
       required this.isReceiving,
-        this.callback,
+      this.callback,
       this.sockettemp});
 
   @override
@@ -121,7 +121,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
           _disconnect();
           break;
       }
-    },onDone: (){
+    }, onDone: () {
       log("done from Audiooo @@@@@@@");
     });
 
@@ -354,10 +354,11 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
     _localStream.dispose();
     _localRenderer.dispose();
     _remoteRenderer.dispose();
-    if(widget.isReceiving)
-    { widget.callback;
-    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    }else{
+    if (widget.isReceiving) {
+      widget.callback;
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    } else {
       Navigator.of(context).pop();
     }
   }
@@ -367,8 +368,8 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final UserDetail user =UserDetail();
-        // Provider.of<UsersProviderClass>(context).getUserWithPhoneNumber(widget.caller);
+    final UserDetail user = UserDetail();
+    // Provider.of<UsersProviderClass>(context).getUserWithPhoneNumber(widget.caller);
     return Scaffold(
         key: _scaffoldkey,
         backgroundColor: Colors.white,
@@ -396,7 +397,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
                 // : Container(
                 //     height: MediaQuery.of(context).size.height,
                 //     width: MediaQuery.of(context).size.width,
-                //     color: Colors.orange,
+                //     color: backendColor,
                 //     // child: Image.network(
                 //     //   G.HOST + "api/v1/images/" + user.profilePicUrl,
                 //     //   fit: BoxFit.cover,

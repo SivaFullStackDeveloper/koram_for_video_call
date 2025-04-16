@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:koram_app/Helper/RuntimeStorage.dart';
-
+import 'package:koram_app/Helper/color.dart';
 List<List<String>> countryTelephoneCodes = [
   ['Afghanistan', '+93'],
   ['Albania', '+355'],
@@ -199,9 +199,8 @@ List<List<String>> countryTelephoneCodes = [
   ['Zimbabwe', '+263'],
 ];
 
-
 class CountryCodeWidget extends StatelessWidget {
-  TextEditingController searchValue=TextEditingController();
+  TextEditingController searchValue = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -224,7 +223,6 @@ class CountryCodeWidget extends StatelessWidget {
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             Row(
               children: [
-
                 Text(
                   'Select Country',
                   style: TextStyle(
@@ -237,13 +235,15 @@ class CountryCodeWidget extends StatelessWidget {
                 ),
                 Expanded(child: SizedBox()),
                 GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pop(context);
                     },
                     child: SvgPicture.asset("assets/charm_cross.svg"))
               ],
             ),
-            SizedBox(height: 30,),
+            SizedBox(
+              height: 30,
+            ),
             Container(
               width: 341,
               height: 50,
@@ -254,11 +254,11 @@ class CountryCodeWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              child:    TextField(
+              child: TextField(
                 textAlign: TextAlign.start,
                 textAlignVertical: TextAlignVertical.center,
                 cursorHeight: 20,
-                cursorColor: Colors.orange,
+                cursorColor: backendColor,
                 cursorWidth: 2.0,
                 controller: searchValue,
 
@@ -274,7 +274,6 @@ class CountryCodeWidget extends StatelessWidget {
                     fontSize: 15,
                     fontFamily: 'Helvetica',
                     fontWeight: FontWeight.w400,
-
                   ),
                 ),
                 // obscureText: true,
@@ -287,9 +286,7 @@ class CountryCodeWidget extends StatelessWidget {
                   fontFamily: 'Helvetica',
                   fontWeight: FontWeight.w400,
                 ),
-
               ),
-
 
               // Row(
               //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -321,44 +318,44 @@ class CountryCodeWidget extends StatelessWidget {
               //   ],
               // ),
             ),
-            SizedBox(height: 20,),
-            for (var c in countryTelephoneCodes)
-            ListTile(
-              // style: ListTileStyle.list,
-              horizontalTitleGap: 2,
-
-              selectedTileColor: Color(0xFFFFEADC),
-
-              // tileColor: Colors.blue,
-              onTap: (){
-
-              },
-              shape:  RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+            SizedBox(
+              height: 20,
             ),
-              leading: Container(
-                width: 29,
-                height: 21,
-                decoration: ShapeDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage("https://via.placeholder.com/29x21"),
-                    fit: BoxFit.fill,
-                  ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
-                ),
-              ),
-              title: Text(
-                '${c[0]}  ${c[1]}',
-                style: TextStyle(
-                  color: Color(0xFF233248),
-                  fontSize: 14,
-                  fontFamily: 'Helvetica',
-                  fontWeight: FontWeight.w400,
-                  height: 0,
-                ),
-              ),
-            )
+            for (var c in countryTelephoneCodes)
+              ListTile(
+                // style: ListTileStyle.list,
+                horizontalTitleGap: 2,
 
+                selectedTileColor: Color(0xFFFFEADC),
+
+                // tileColor: Colors.blue,
+                onTap: () {},
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                leading: Container(
+                  width: 29,
+                  height: 21,
+                  decoration: ShapeDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage("https://via.placeholder.com/29x21"),
+                      fit: BoxFit.fill,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2)),
+                  ),
+                ),
+                title: Text(
+                  '${c[0]}  ${c[1]}',
+                  style: TextStyle(
+                    color: Color(0xFF233248),
+                    fontSize: 14,
+                    fontFamily: 'Helvetica',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+              )
           ]),
         ),
       ),

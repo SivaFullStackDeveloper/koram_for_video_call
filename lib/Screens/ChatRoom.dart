@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -42,7 +42,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
   int trendingroomCount = 0;
   var searchValue = TextEditingController();
   bool isJoinedRoom = false;
-   var _tabController;
+  var _tabController;
   String? joinedChatRoomId;
   String ChatRoomTitle = "Chat Room";
   ChatRoom? SelectedRoom;
@@ -52,7 +52,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
   late SharedPreferences prefs;
   UserModel loggedUserDetails = UserModel();
   File? profileImage;
-  bool canPOP=true;
+  bool canPOP = true;
   @override
   void initState() {
     Future.delayed(Duration.zero).then((value) async {
@@ -71,10 +71,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
           .fetchChatRoom();
 
       log("isjoinedRoom ${prefs.getBool("isJoinedRoom")} Room Id ${prefs.getString("JoindRoomId")} Room Name ${prefs!.getString("JoindRoomName")}");
-      setState(() {
-        isChatroomLoad = false;
-        isPreferenceFetched = true;
-      });
+      if (mounted) {
+        setState(() {
+          isChatroomLoad = false;
+          isPreferenceFetched = true;
+        });
+      }
     });
 
     // TODO: implement initState
@@ -84,17 +86,18 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
   var title;
   ChangeTab() {
     log("Change tab called ${_tabController.index}");
-      _tabController.animateTo(0);
+    _tabController.animateTo(0);
   }
 
   @override
   Widget build(BuildContext context) {
     UsersProviderClass UserClass =
-    Provider.of<UsersProviderClass>(context, listen: false);
+        Provider.of<UsersProviderClass>(context, listen: false);
     List<N.Notification> notification =
         Provider.of<N.Notifications>(context).notification;
     allRooms = Provider.of<ChatRoomsProvider>(context).chatRooms;
-    ChatRoomsProvider chatRoomProviderLocal = Provider.of<ChatRoomsProvider>(context, listen: true);
+    ChatRoomsProvider chatRoomProviderLocal =
+        Provider.of<ChatRoomsProvider>(context, listen: true);
 
     locationRoomcount = 0;
     trendingroomCount = 0;
@@ -104,7 +107,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
       allRooms.forEach((element) {
         if (element.id == prefs!.getString("JoinedRoomId")) {
           chatRoomProviderLocal.SelectedRoom = element;
-          SelectedRoom=element;
+          SelectedRoom = element;
 
           log(" Matched  room  ${element.name} ${element.id} Prefid ${prefs!.getString("JoinedRoomId")}");
         }
@@ -124,7 +127,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
           case "Trending":
             {
               setState(() {
-                trendingroomCount =element.users!.length;
+                trendingroomCount = element.users!.length;
               });
               log("Trending room Count $trendingroomCount");
             }
@@ -152,12 +155,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
         ChatRoomTitle = prefs!.getString("JoinedRoomName") ?? "Chat Room";
         joinedChatRoomId = prefs!.getString("JoinedRoomId");
 
-        if (prefs!.getBool("isJoinedRoom") == true && chatRoomProviderLocal.isFromExplore) {
-
+        if (prefs!.getBool("isJoinedRoom") == true &&
+            chatRoomProviderLocal.isFromExplore) {
           setState(() {
             _tabController.index = 1;
           });
-          chatRoomProviderLocal.isFromExplore=false;
+          chatRoomProviderLocal.isFromExplore = false;
         }
       }
     }
@@ -179,21 +182,21 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
           setState(() {
             explore = false;
           });
-          canPOP=false;
+          canPOP = false;
           return;
         } else {
           if (_tabController.index == 0) {
-            ChatRoomsProvider.isChangePage=true;
+            ChatRoomsProvider.isChangePage = true;
             // chatRoomProviderLocal.ChangeHomePage();
-            canPOP= true;
+            canPOP = true;
             return;
           } else if (_tabController.index == 1) {
             _tabController.animateTo(1);
-            canPOP= false;
+            canPOP = false;
             return;
           }
         }
-        canPOP=false;
+        canPOP = false;
       },
       child: explore
           ? ExploreScreen(
@@ -245,9 +248,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
                     ],
                   ),
                   bottom: TabBar(
-                    controller: _tabController,
-                      indicatorColor: Color(0xFFFF6701),
-                      labelColor: Color(0xFFFF6701),
+                      controller: _tabController,
+                      indicatorColor: backendColor,
+                      labelColor: backendColor,
                       unselectedLabelColor: Color(0xFF303030),
                       unselectedLabelStyle: TextStyle(
                         color: Color(0xFF303030),
@@ -263,7 +266,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
                           // child: Text(
                           //   'Messages',
                           //   style: TextStyle(
-                          //     // color: ChatTabController.index==0?Color(0xFFFF6701):Color(0xFF303030),
+                          //     // color: ChatTabController.index==0?backendColor:Color(0xFF303030),
                           //     fontSize: 14,
                           //     fontFamily: 'Helvetica',
                           //     fontWeight: FontWeight.w400,
@@ -275,7 +278,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
                           // child: Text(
                           //   'Stories',
                           //   style: TextStyle(
-                          //     // color: ChatTabController.index==1?Color(0xFFFF6701):Color(0xFF303030),
+                          //     // color: ChatTabController.index==1?backendColor:Color(0xFF303030),
                           //     fontSize: 14,
                           //     fontFamily: 'Helvetica',
                           //     fontWeight: FontWeight.w400,
@@ -342,52 +345,53 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
                       width: 10,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (ctx) => NewProfileScreen()));
-                      },
-                      child: Container(
-                        width: 41,
-                        child: UserClass.LoggedUser != null &&UserClass.LoggedUser!
-                            .privateProfilePicUrl !=null
-                            ? CircleAvatar(
-                          backgroundImage:
-                          AssetImage("assets/profile.png"),
-                          foregroundImage: CachedNetworkImageProvider(
-                              G.HOST +
-                                  "api/v1/images/" +
-                                  UserClass.LoggedUser!
-                                      .privateProfilePicUrl!),
-                          // onForegroundImageError: (){}AssetImage("assets/profile.png"),
-                          radius: 60,
-                          backgroundColor: Colors.grey[300],
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => NewProfileScreen()));
+                        },
+                        child: Container(
+                          width: 41,
+                          child: UserClass.LoggedUser != null &&
+                                  UserClass.LoggedUser!.privateProfilePicUrl !=
+                                      null
+                              ? CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage("assets/profile.png"),
+                                  foregroundImage: CachedNetworkImageProvider(
+                                      G.HOST +
+                                          "api/v1/images/" +
+                                          UserClass.LoggedUser!
+                                              .privateProfilePicUrl!),
+                                  // onForegroundImageError: (){}AssetImage("assets/profile.png"),
+                                  radius: 60,
+                                  backgroundColor: Colors.grey[300],
+                                )
+                              : CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage("assets/profile.png"),
+                                  radius: 60,
+                                  backgroundColor: Colors.grey[300],
+                                ),
                         )
-                            : CircleAvatar(
-                          backgroundImage:
-                          AssetImage("assets/profile.png"),
-                          radius: 60,
-                          backgroundColor: Colors.grey[300],
-                        ),
-                      )
 
-                      // Container(
-                      //   width: 31.94,
-                      //   height: 31.94,
-                      //   decoration: ShapeDecoration(
-                      //     image: loggedUserDetails.userDetail?.publicProfilePicUrl != ""
-                      //         ? DecorationImage(
-                      //             image: NetworkImage(G.HOST +
-                      //                 "api/v1/images/" +
-                      //                 loggedUserDetails.userDetail!.publicProfilePicUrl! ),
-                      //             fit: BoxFit.contain,
-                      //           )
-                      //         : DecorationImage(
-                      //             image: AssetImage("assets/profile.png"),
-                      //             fit: BoxFit.contain),
-                      //     shape: CircleBorder(),
-                      //   ),
-                      // ),
-                    ),
+                        // Container(
+                        //   width: 31.94,
+                        //   height: 31.94,
+                        //   decoration: ShapeDecoration(
+                        //     image: loggedUserDetails.userDetail?.publicProfilePicUrl != ""
+                        //         ? DecorationImage(
+                        //             image: NetworkImage(G.HOST +
+                        //                 "api/v1/images/" +
+                        //                 loggedUserDetails.userDetail!.publicProfilePicUrl! ),
+                        //             fit: BoxFit.contain,
+                        //           )
+                        //         : DecorationImage(
+                        //             image: AssetImage("assets/profile.png"),
+                        //             fit: BoxFit.contain),
+                        //     shape: CircleBorder(),
+                        //   ),
+                        // ),
+                        ),
                     SizedBox(
                       width: 19,
                     ),
@@ -404,194 +408,198 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
                 ),
                 body: TabBarView(
                     controller: _tabController,
-
-                    physics: BouncingScrollPhysics(), children: [
-                  Builder(builder: (BuildContext context) {
-                    return ListView(
-                      physics: BouncingScrollPhysics(),
-                      children: [
-                        SizedBox(
-                          height: 28,
-                        ),
-                        ChatRoomCard(
-                          image: "assets/chatRoomLocation.svg",
-                          title: "Location",
-                          userCount: locationRoomcount,
-                          color: Colors.orange,
-                          change: () {
-                            setState(() {
-                              explore = true;
-                              title = "Location";
-                            });
-                            //    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>LocationRoom()));
-                          },
-                        ),
-                        ChatRoomCard(
-                            userCount: interestroomCount,
-                            image: "assets/chatRoomInterest.svg",
-                            title: "Interest",
-                            color: Colors.red.shade400,
-                            change: () {
-                              setState(() {
-                                explore = true;
-                                title = "Interest";
-                              });
-                            }),
-                        ChatRoomCard(
-                            userCount: trendingroomCount,
-                            image: "assets/chatRoomTrending.svg",
-                            title: "Trending",
-                            color: Colors.blue,
-                            change: () {
-                              setState(() {
-                                explore = true;
-                                title = "Trending";
-                              });
-                            }),
-                        ChatRoomCard(
-                          userCount: favRoomcount,
-                          image: "assets/chatRoomFav.svg",
-                          title: "Favourite",
-                          color: Colors.orange,
-                          change: () {
-                            setState(() {
-                              explore = true;
-                              title = "Favourite";
-                            });
-                          },
-                        ),
-                      ],
-                    );
-                  }),
-                  Builder(builder: (BuildContext context) {
-
-
-
-                    return chatRoomProviderLocal.SelectedRoom != null
-                        ? ChatRoomScreenChat(
-                            // LeaveRoom: () {
-                            //   log("LEave Room from main Screen Called ");
-                            //   // Navigator.pop(context);
-                            //   // prefs.setBool("isJoinedRoom", false);
-                            //   // prefs.setString("JoindRoomId", "");
-                            //   // prefs.setString("JoindRoomName", "");
-                            //   //
-                            //   //   setState(() {
-                            //   //     explore = true;
-                            //   //     isJoinedRoom = false;
-                            //   //     joinedChatRoomId = "";
-                            //   //     ChatRoomTitle = "";
-                            //   //   });
-                            //
-                            // },
-                            groupName: chatRoomProviderLocal.SelectedRoom!,
-                            changeTab: ChangeTab,
-                            // ChatRoomId: joinedChatRoomId,
-                            //       isAlreadyJoined: isJoinedRoom,
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                child: Stack(
-                                  children: [
-                                    // Positioned(
-                                    //
-                                    //     child: SvgPicture.asset("assets/chatRoomBg.svg"),
-                                    //   left: 0,
-                                    //   right: 0,
-                                    //   top: 0,
-                                    //
-                                    // ),
-                                    SvgPicture.asset(
-                                        "assets/chatRoomFront.svg"),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 268,
-                                child: Text(
-                                  'Start your chatroom now!',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color(0xFF303030),
-                                    fontSize: 18,
-                                    fontFamily: 'Helvetica',
-                                    fontWeight: FontWeight.w700,
-                                    height: 0,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 17, 10, 0),
-                                child: SizedBox(
-                                  width: 349,
-                                  child: Text(
-                                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Color(0xFF707070),
-                                      fontSize: 14,
-                                      fontFamily: 'Helvetica',
-                                      fontWeight: FontWeight.w400,
-                                      height: 0,
+                    physics: BouncingScrollPhysics(),
+                    children: [
+                      Builder(builder: (BuildContext context) {
+                        return ListView(
+                          physics: BouncingScrollPhysics(),
+                          children: [
+                            SizedBox(
+                              height: 28,
+                            ),
+                            ChatRoomCard(
+                              image: "assets/chatRoomLocation.svg",
+                              title: "Location",
+                              userCount: locationRoomcount,
+                              color: backendColor,
+                              change: () {
+                                setState(() {
+                                  explore = true;
+                                  title = "Location";
+                                });
+                                //    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>LocationRoom()));
+                              },
+                            ),
+                            ChatRoomCard(
+                                userCount: interestroomCount,
+                                image: "assets/chatRoomInterest.svg",
+                                title: "Interest",
+                                color: Colors.red.shade400,
+                                change: () {
+                                  setState(() {
+                                    explore = true;
+                                    title = "Interest";
+                                  });
+                                }),
+                            ChatRoomCard(
+                                userCount: trendingroomCount,
+                                image: "assets/chatRoomTrending.svg",
+                                title: "Trending",
+                                color: Colors.blue,
+                                change: () {
+                                  setState(() {
+                                    explore = true;
+                                    title = "Trending";
+                                  });
+                                }),
+                            ChatRoomCard(
+                              userCount: favRoomcount,
+                              image: "assets/chatRoomFav.svg",
+                              title: "Favourite",
+                              color: backendColor,
+                              change: () {
+                                setState(() {
+                                  explore = true;
+                                  title = "Favourite";
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      }),
+                      Builder(builder: (BuildContext context) {
+                        return chatRoomProviderLocal.SelectedRoom != null
+                            ? ChatRoomScreenChat(
+                                // LeaveRoom: () {
+                                //   log("LEave Room from main Screen Called ");
+                                //   // Navigator.pop(context);
+                                //   // prefs.setBool("isJoinedRoom", false);
+                                //   // prefs.setString("JoindRoomId", "");
+                                //   // prefs.setString("JoindRoomName", "");
+                                //   //
+                                //   //   setState(() {
+                                //   //     explore = true;
+                                //   //     isJoinedRoom = false;
+                                //   //     joinedChatRoomId = "";
+                                //   //     ChatRoomTitle = "";
+                                //   //   });
+                                //
+                                // },
+                                groupName: chatRoomProviderLocal.SelectedRoom!,
+                                changeTab: ChangeTab,
+                                // ChatRoomId: joinedChatRoomId,
+                                //       isAlreadyJoined: isJoinedRoom,
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    child: Stack(
+                                      children: [
+                                        // Positioned(
+                                        //
+                                        //     child: SvgPicture.asset("assets/chatRoomBg.svg"),
+                                        //   left: 0,
+                                        //   right: 0,
+                                        //   top: 0,
+                                        //
+                                        // ),
+                                        Icon(
+                                          Icons.message,
+                                          color: backendColor,
+                                          size: 100,
+                                        ),
+                                        // SvgPicture.asset(
+                                        //     "assets/chatRoomFront.svg"),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-
-                                    _tabController.animateTo(0);
-                                },
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 40, 10, 0),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          height: 54,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 18),
-                                          decoration: ShapeDecoration(
-                                            color: Color(0xFFFF6701),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'EXPLORE CHATROOMS',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontFamily: 'Helvetica',
-                                                  fontWeight: FontWeight.w700,
-                                                  height: 0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                  SizedBox(
+                                    width: 268,
+                                    child: Text(
+                                      'Start your chatroom now!',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Color(0xFF303030),
+                                        fontSize: 18,
+                                        fontFamily: 'Helvetica',
+                                        fontWeight: FontWeight.w700,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10, 17, 10, 0),
+                                    child: SizedBox(
+                                      width: 349,
+                                      child: Text(
+                                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Color(0xFF707070),
+                                          fontSize: 14,
+                                          fontFamily: 'Helvetica',
+                                          fontWeight: FontWeight.w400,
+                                          height: 0,
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
-                          );
-                  })
-                ]),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _tabController.animateTo(0);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 40, 10, 0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              height: 54,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 18),
+                                              decoration: ShapeDecoration(
+                                                color: backendColor,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    'EXPLORE CHATROOMS',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Helvetica',
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      height: 0,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                      })
+                    ]),
               ),
             ),
     );

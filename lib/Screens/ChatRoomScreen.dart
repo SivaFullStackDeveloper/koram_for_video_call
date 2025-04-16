@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:koram_app/Helper/CommonWidgets.dart';
 import 'package:koram_app/Helper/RuntimeStorage.dart';
 import 'package:path/path.dart' as path;
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -70,68 +70,62 @@ class _ChatRoomScreenChatState extends State<ChatRoomScreenChat>
     String message =
         "Hey, join me on Koram! It's a chat app where you can chat with friends and meet new people nearby. Download it now! \n$downloadLink";
 
-
     String url = downloadLink; // Make sure this contains your actual URL
 
     Share.share("$message\n\n$url", subject: "Hey, join me on Koram!");
   }
 
   void sendChatroomInvite(UsersProviderClass UserClass, String chatRommId) {
-
     showModalBottomSheet(
       context: context,
-      shape:RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
         ),
       ),
       backgroundColor: Colors.white,
       elevation: 2,
-useSafeArea: true,
+      useSafeArea: true,
       builder: (BuildContext context) {
         return SingleChildScrollView(
           child: Column(
             children: [
-              Text("Send Chatroom Invite",style: TextStyle(fontSize: 20),),
+              Text(
+                "Send Chatroom Invite",
+                style: TextStyle(fontSize: 20),
+              ),
               Container(
-                height: MediaQuery.of(context).size.height/2,
+                height: MediaQuery.of(context).size.height / 2,
                 color: Colors.white,
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   itemCount: UserClass.finalFriendsList.length,
-
                   itemBuilder: (context, index) => ListTile(
-                    title: Text("${UserClass.finalFriendsList[index].publicName}"),
+                    title:
+                        Text("${UserClass.finalFriendsList[index].publicName}"),
                     onTap: () {},
-                    leading:
-
-                    Container(
+                    leading: Container(
                       width: 31,
                       height: 31,
                       decoration: ShapeDecoration(
                         image: UserClass.finalFriendsList[index]
-                            .publicProfilePicUrl !=
-                            ""
+                                    .publicProfilePicUrl !=
+                                ""
                             ? DecorationImage(
-                          image:
-                               CachedNetworkImageProvider(G
-                              .HOST +
-                              "api/v1/images/" +
-                              UserClass.finalFriendsList[index]
-                                  .publicProfilePicUrl!),
-
-
-                          fit: BoxFit.fill,
-                        )
+                                image: CachedNetworkImageProvider(G.HOST +
+                                    "api/v1/images/" +
+                                    UserClass.finalFriendsList[index]
+                                        .publicProfilePicUrl!),
+                                fit: BoxFit.fill,
+                              )
                             : DecorationImage(
-                          image: AssetImage(
-                            "assets/profile.png",
-                          ),
-                          fit: BoxFit.fill,
-                        ),
+                                image: AssetImage(
+                                  "assets/profile.png",
+                                ),
+                                fit: BoxFit.fill,
+                              ),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(49),
+                          borderRadius: BorderRadius.circular(49),
                         ),
                       ),
                     ),
@@ -148,31 +142,31 @@ useSafeArea: true,
                     //
                     // ),
                     trailing: TextButton(
-                      child: Text("Send Invite",style: TextStyle(color: RuntimeStorage().PrimaryOrange),),
+                      child: Text(
+                        "Send Invite",
+                        style: TextStyle(color: RuntimeStorage().PrimaryOrange),
+                      ),
                       onPressed: () {
                         try {
                           Provider.of<ChatSocket>(context, listen: false)
                               .sendRoomInvite(
-                              widget.groupName, UserClass.finalFriendsList[index].phoneNumber!,
-                              );
+                            widget.groupName,
+                            UserClass.finalFriendsList[index].phoneNumber!,
+                          );
                           log("sending invite");
                           Navigator.pop(context);
+                          CommanWidgets().showSnackBar(context,
+                              "Group invite sent Successfully", Colors.green);
+                        } catch (e) {
                           CommanWidgets().showSnackBar(
-                              context, "Group invite sent Successfully",
-                              Colors.green);
-                        }catch(e){
-                          CommanWidgets().showSnackBar(
-                              context, "Error while sending invite,Please try later",
+                              context,
+                              "Error while sending invite,Please try later",
                               Colors.red);
                         }
                       },
                     ),
                   ),
                 ),
-
-
-
-
               ),
             ],
           ),
@@ -345,7 +339,6 @@ useSafeArea: true,
           "groupId": widget.groupName.id,
           "time": DateTime.now().toString(),
           "fileName": json.decode(value)[0]["mediaName"]
-
         };
         await chatMessage.addMessage(
             _msgInput.text,
@@ -584,251 +577,191 @@ useSafeArea: true,
     _scrollToBottom();
   }
 
-  SendMessageDialouge(UserDetail theRoomUser)
-  {
+  SendMessageDialouge(UserDetail theRoomUser) {
     String txt = "";
-    bool isloggedUser =
-        theRoomUser.phoneNumber ==
-            G.userPhoneNumber;
+    bool isloggedUser = theRoomUser.phoneNumber == G.userPhoneNumber;
 
-    return
-      showDialog(
-          context: context,
-          builder: (ctx) => Dialog(
-            shape:
-            RoundedRectangleBorder(
-              borderRadius:
-              BorderRadius
-                  .circular(12),
-            ),
-            backgroundColor:
-            Colors.white,
-            child: Container(
-              width: 350,
-              height: 290,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Text(
-                    'Sending Message to',
-                    style:
-                    TextStyle(
-                      color: Color(
-                          0xFF303030),
-                      fontSize: 16,
-                      fontFamily:
-                      'Helvetica',
-                      fontWeight:
-                      FontWeight
-                          .w700,
-                      height: 0,
+    return showDialog(
+        context: context,
+        builder: (ctx) => Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              backgroundColor: Colors.white,
+              child: Container(
+                width: 350,
+                height: 290,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 18,
                     ),
-                  ),
-                  SizedBox(
-                    height: 22,
-                  ),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration:
-                    ShapeDecoration(
-                      image: theRoomUser
-                          .publicProfilePicUrl !=
-                          ""
-                          ? DecorationImage(
-                        image:
-                             CachedNetworkImageProvider(G.HOST + "api/v1/images/" + theRoomUser.publicProfilePicUrl!),
-                            // : CachedNetworkImageProvider(G.HOST + "api/v1/images/" + theRoomUser.privateProfilePicUrl!),
-                        fit: BoxFit
-                            .fill,
-                      )
-                          : DecorationImage(
-                        image:
-                        AssetImage(
-                          "assets/profile.png",
-                        ),
-                        fit: BoxFit
-                            .fill,
-                      ),
-                      shape:
-                      RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(
-                            49),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    '${theRoomUser.publicName}',
-                    style:
-                    TextStyle(
-                      color: Color(
-                          0xFF303030),
-                      fontSize: 12,
-                      fontFamily:
-                      'Poppins',
-                      fontWeight:
-                      FontWeight
-                          .w400,
-                      height: 0,
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                    const EdgeInsets
-                        .fromLTRB(
-                        18,
-                        14,
-                        18,
-                        22),
-                    child:
-                    TextField(
-                      onChanged:
-                          (c) {
-                        txt = c;
-                      },
-                      autofocus:
-                      false,
-                      maxLines: 6,
-                      style:
-                      TextStyle(
-                        color: Color(
-                            0xFF484848),
-                        fontSize:
-                        12,
-                        fontFamily:
-                        'Poppins',
-                        fontWeight:
-                        FontWeight
-                            .w400,
+                    Text(
+                      'Sending Message to',
+                      style: TextStyle(
+                        color: Color(0xFF303030),
+                        fontSize: 16,
+                        fontFamily: 'Helvetica',
+                        fontWeight: FontWeight.w700,
                         height: 0,
                       ),
-                      decoration:
-                      InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide:
-                            BorderSide
-                                .none,
-                            borderRadius:
-                            BorderRadius.circular(36.04)),
-                        hintText:
-                        'Say “Hello”',
-                        fillColor:
-                        Color(
-                            0xFFF4F4F7),
-                        filled:
-                        true,
-                        // prefix: SvgPicture.asset("assets/star.svg")
+                    ),
+                    SizedBox(
+                      height: 22,
+                    ),
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: ShapeDecoration(
+                        image: theRoomUser.publicProfilePicUrl != ""
+                            ? DecorationImage(
+                                image: CachedNetworkImageProvider(G.HOST +
+                                    "api/v1/images/" +
+                                    theRoomUser.publicProfilePicUrl!),
+                                // : CachedNetworkImageProvider(G.HOST + "api/v1/images/" + theRoomUser.privateProfilePicUrl!),
+                                fit: BoxFit.fill,
+                              )
+                            : DecorationImage(
+                                image: AssetImage(
+                                  "assets/profile.png",
+                                ),
+                                fit: BoxFit.fill,
+                              ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(49),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                    const EdgeInsets
-                        .only(
-                        left:
-                        18,
-                        right:
-                        18,
-                        bottom:
-                        19),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child:
-                          GestureDetector(
-                            onTap:
-                                () async {
-                              await Provider.of<N.Notifications>(context, listen: false).addNotification(
-                                  txt,
-                                  theRoomUser.phoneNumber!,
-                                  G.userPhoneNumber);
-                              Navigator.of(context)
-                                  .pop();
-                              // SnackBar
-                            },
-                            child: Container(
-                                width: 151,
-                                height: 44,
-                                decoration: ShapeDecoration(
-                                  color: Color(0xFFF2F2F2),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-
-                                child: Center(
-                                    child: Text(
-                                      'Cancel',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Color(0xFF707070),
-                                        fontSize: 12,
-                                        fontFamily: 'Helvetica',
-                                        fontWeight: FontWeight.w700,
-                                        height: 0,
-                                      ),
-                                    ))),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Expanded(
-                          child:
-                          GestureDetector(
-                            onTap:
-                                () async {
-                              await Provider.of<N.Notifications>(context, listen: false).addNotification(
-                                  txt,
-                                  theRoomUser.phoneNumber!,
-                                  G.userPhoneNumber);
-                              Navigator.of(context)
-                                  .pop();
-                              // SnackBar
-                            },
-                            child: Container(
-                                width: 151,
-                                height: 44,
-                                decoration: ShapeDecoration(
-                                  color: Color(0xFFFF6701),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-
-                                child: Center(
-                                    child: Text(
-                                      'Send Request',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontFamily: 'Helvetica',
-                                        fontWeight: FontWeight.w700,
-                                        height: 0,
-                                      ),
-                                    ))),
-                          ),
-                        ),
-                      ],
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
-                ],
+                    Text(
+                      '${theRoomUser.publicName}',
+                      style: TextStyle(
+                        color: Color(0xFF303030),
+                        fontSize: 12,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w400,
+                        height: 0,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(18, 14, 18, 22),
+                      child: TextField(
+                        onChanged: (c) {
+                          txt = c;
+                        },
+                        autofocus: false,
+                        maxLines: 6,
+                        style: TextStyle(
+                          color: Color(0xFF484848),
+                          fontSize: 12,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w400,
+                          height: 0,
+                        ),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(36.04)),
+                          hintText: 'Say “Hello”',
+                          fillColor: Color(0xFFF4F4F7),
+                          filled: true,
+                          // prefix: SvgPicture.asset("assets/star.svg")
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 18, right: 18, bottom: 19),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async {
+                                await Provider.of<N.Notifications>(context,
+                                        listen: false)
+                                    .addNotification(
+                                        txt,
+                                        theRoomUser.phoneNumber!,
+                                        G.userPhoneNumber);
+                                Navigator.of(context).pop();
+                                // SnackBar
+                              },
+                              child: Container(
+                                  width: 151,
+                                  height: 44,
+                                  decoration: ShapeDecoration(
+                                    color: Color(0xFFF2F2F2),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    'Cancel',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Color(0xFF707070),
+                                      fontSize: 12,
+                                      fontFamily: 'Helvetica',
+                                      fontWeight: FontWeight.w700,
+                                      height: 0,
+                                    ),
+                                  ))),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async {
+                                await Provider.of<N.Notifications>(context,
+                                        listen: false)
+                                    .addNotification(
+                                        txt,
+                                        theRoomUser.phoneNumber!,
+                                        G.userPhoneNumber);
+                                Navigator.of(context).pop();
+                                // SnackBar
+                              },
+                              child: Container(
+                                  width: 151,
+                                  height: 44,
+                                  decoration: ShapeDecoration(
+                                    color: backendColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    'Send Request',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontFamily: 'Helvetica',
+                                      fontWeight: FontWeight.w700,
+                                      height: 0,
+                                    ),
+                                  ))),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ));
+            ));
   }
+
   @override
   Widget build(BuildContext context) {
-
     UsersProviderClass UserClass =
-    Provider.of<UsersProviderClass>(context, listen: false);
+        Provider.of<UsersProviderClass>(context, listen: false);
     ChatSocket chatdata = Provider.of<ChatSocket>(context, listen: true);
     ChatRoomsProvider chatRoomProviderLocal =
         Provider.of<ChatRoomsProvider>(context, listen: false);
@@ -973,7 +906,7 @@ useSafeArea: true,
                   GestureDetector(
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
-                      sendChatroomInvite( UserClass,widget.groupName.id!);
+                      sendChatroomInvite(UserClass, widget.groupName.id!);
                     },
                     child: ListTile(
                       horizontalTitleGap: 5,
@@ -990,13 +923,16 @@ useSafeArea: true,
                         width: 31,
                         height: 31,
                         decoration: ShapeDecoration(
-                          color: Color(0xFFFFF3EC),
+                          color: backendColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(49),
                           ),
                         ),
                         child: Center(
-                            child: SvgPicture.asset("assets/add-user.svg")),
+                            child: SvgPicture.asset(
+                          "assets/add-user.svg",
+                          color: Colors.white,
+                        )),
                       ),
                     ),
                   ),
@@ -1102,18 +1038,17 @@ useSafeArea: true,
                                 RoomUpdated!.userDetails?[i].phoneNumber ==
                                     G.userPhoneNumber;
 
-
                             return ListTile(
-
                               onTap: () {
                                 log("on tap called ");
                                 String txt = "";
-                                SendMessageDialouge(RoomUpdated!.userDetails![i]);
+                                SendMessageDialouge(
+                                    RoomUpdated!.userDetails![i]);
                               },
                               dense: true,
                               titleAlignment: ListTileTitleAlignment.center,
                               horizontalTitleGap: 5,
-                               minTileHeight: 60,
+                              minTileHeight: 60,
                               title: Text(
                                 '${RoomUpdated!.userDetails?[i].publicName}',
                                 style: TextStyle(
@@ -1132,17 +1067,16 @@ useSafeArea: true,
                                           ""
                                       ? DecorationImage(
                                           image: isloggedUser
-                                              ? CachedNetworkImageProvider(G
-                                                      .HOST +
-                                                  "api/v1/images/" +
-                                                  RoomUpdated!
-                                                      .userDetails![i]
-                                                      .publicProfilePicUrl!)
+                                              ? CachedNetworkImageProvider(
+                                                  G.HOST +
+                                                      "api/v1/images/" +
+                                                      RoomUpdated!
+                                                          .userDetails![i]
+                                                          .publicProfilePicUrl!)
                                               : CachedNetworkImageProvider(G
                                                       .HOST +
                                                   "api/v1/images/" +
-                                                  RoomUpdated!
-                                                      .userDetails![i]
+                                                  RoomUpdated!.userDetails![i]
                                                       .privateProfilePicUrl!),
                                           fit: BoxFit.fill,
                                         )
@@ -1153,8 +1087,7 @@ useSafeArea: true,
                                           fit: BoxFit.fill,
                                         ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(49),
+                                    borderRadius: BorderRadius.circular(49),
                                   ),
                                 ),
                               ),
@@ -1173,22 +1106,24 @@ useSafeArea: true,
                                   ? GestureDetector(
                                       onTap: () {
                                         log("on tap called ");
-                                        SendMessageDialouge(RoomUpdated!.userDetails![i]);
+                                        SendMessageDialouge(
+                                            RoomUpdated!.userDetails![i]);
                                       },
                                       child: Container(
                                         width: 36,
                                         height: 31,
                                         decoration: ShapeDecoration(
-                                          color: Color(0xFFFFEADC),
+                                          color: backendColor,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(
-                                                    17.41),
+                                                BorderRadius.circular(17.41),
                                           ),
                                         ),
                                         child: Center(
                                             child: SvgPicture.asset(
-                                                "assets/Layer_1.svg")),
+                                          "assets/Layer_1.svg",
+                                          color: Colors.white,
+                                        )),
                                       ),
                                     )
                                   : SizedBox(),
@@ -1223,10 +1158,14 @@ useSafeArea: true,
                 width: 59,
                 height: 59,
                 decoration: ShapeDecoration(
-                  color: Color(0xFFFFEADC),
+                  color: backendColor,
                   shape: OvalBorder(),
                 ),
-                child: Center(child: SvgPicture.asset("assets/2 User.svg")),
+                child: Center(
+                    child: SvgPicture.asset(
+                  "assets/2 User.svg",
+                  color: Colors.white,
+                )),
               ),
             ),
           ),
@@ -1317,7 +1256,7 @@ useSafeArea: true,
                 //             width: 57.58,
                 //             height: 42.35,
                 //             decoration: ShapeDecoration(
-                //               color: Color(0xFFFF6701),
+                //               color: backendColor,
                 //               shape: RoundedRectangleBorder(
                 //                 borderRadius: BorderRadius.circular(22.44),
                 //               ),
@@ -1420,7 +1359,7 @@ useSafeArea: true,
                                 width: 57.58,
                                 height: 42.35,
                                 decoration: ShapeDecoration(
-                                  color: Color(0xFFFF6701),
+                                  color: backendColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(22.44),
                                   ),

@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:koram_app/Helper/Helper.dart';
@@ -28,7 +28,8 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    List<UserDetail> user = Provider.of<UsersProviderClass>(context).finalFriendsList;
+    List<UserDetail> user =
+        Provider.of<UsersProviderClass>(context).finalFriendsList;
     List<N.Notification> notification =
         Provider.of<N.Notifications>(context).notification;
     return StatefulBuilder(
@@ -89,7 +90,6 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-
                       leading: Padding(
                         padding: const EdgeInsets.only(left: 20.0),
                         child: GestureDetector(
@@ -119,8 +119,8 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                                   element.phoneNumber == notification[i].sentBy)
                               .toList();
                           var thisUser = user
-                              .where(
-                                  (element) => element.phoneNumber == G.userPhoneNumber)
+                              .where((element) =>
+                                  element.phoneNumber == G.userPhoneNumber)
                               .toList()[0];
                           return Padding(
                             padding:
@@ -137,12 +137,14 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                                           height: 48,
                                           clipBehavior: Clip.antiAlias,
                                           decoration: ShapeDecoration(
-                                            image: u[0].publicProfilePicUrl != ""
+                                            image: u[0].publicProfilePicUrl !=
+                                                    ""
                                                 ? DecorationImage(
                                                     image: NetworkImage(G.HOST +
                                                         "api/v1/images/" +
                                                         ((u.length > 0)
-                                                            ? u[0].publicProfilePicUrl!
+                                                            ? u[0]
+                                                                .publicProfilePicUrl!
                                                             : "")),
                                                     fit: BoxFit.fill,
                                                   )
@@ -178,7 +180,8 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                                                       TextSpan(
                                                         children: [
                                                           TextSpan(
-                                                            text: u[0].privateName,
+                                                            text: u[0]
+                                                                .privateName,
                                                             style: TextStyle(
                                                               color: Color(
                                                                   0xFF303030),
@@ -240,7 +243,9 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () async {
-                                                      Provider.of<N.Notifications>(
+                                                      Provider.of<
+                                                                  N
+                                                                  .Notifications>(
                                                               context,
                                                               listen: false)
                                                           .deleteNotification(
@@ -251,7 +256,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                                                       width: 120,
                                                       height: 44,
                                                       padding: const EdgeInsets
-                                                              .symmetric(
+                                                          .symmetric(
                                                           horizontal: 10,
                                                           vertical: 14),
                                                       decoration:
@@ -287,14 +292,16 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
-                                                      await Provider.of<UsersProviderClass>(
+                                                      await Provider.of<
+                                                                  UsersProviderClass>(
                                                               context,
                                                               listen: false)
                                                           .addFriend(
                                                               notification[i]
                                                                   .sentTo,
                                                               u[0].sId!);
-                                                      await Provider.of<UsersProviderClass>(
+                                                      await Provider.of<
+                                                                  UsersProviderClass>(
                                                               context,
                                                               listen: false)
                                                           .addFriend(
@@ -302,7 +309,8 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                                                                   .sentBy,
                                                               thisUser.sId!);
                                                       await Provider.of<
-                                                                  N.Notifications>(
+                                                                  N
+                                                                  .Notifications>(
                                                               context,
                                                               listen: false)
                                                           .deleteNotification(
@@ -315,13 +323,12 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                                                       width: 120,
                                                       height: 44,
                                                       padding: const EdgeInsets
-                                                              .symmetric(
+                                                          .symmetric(
                                                           horizontal: 10,
                                                           vertical: 14),
                                                       decoration:
                                                           ShapeDecoration(
-                                                        color:
-                                                            Color(0xFFFF6701),
+                                                        color: backendColor,
                                                         shape:
                                                             RoundedRectangleBorder(
                                                           borderRadius:
@@ -382,7 +389,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                           //     "People Nearby",
                           //     style: TextStyle(
                           //         fontWeight: FontWeight.bold,
-                          //         color: Colors.orange),
+                          //         color: backendColor),
                           //   ),
                           //   trailing: Container(
                           //     width: 150,
@@ -503,7 +510,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                           //                                         height: 30,
                           //                                         decoration: BoxDecoration(
                           //                                             borderRadius: BorderRadius.circular(20),
-                          //                                             border: Border.all(color: Colors.orange),
+                          //                                             border: Border.all(color: backendColor),
                           //                                             boxShadow: [
                           //                                               BoxShadow(
                           //                                                   color: Colors
@@ -547,7 +554,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                           //                       offset: Offset(2, 3),
                           //                       blurRadius: 2)
                           //                 ],
-                          //                 color: Colors.orange),
+                          //                 color: backendColor),
                           //             child: Row(
                           //               mainAxisAlignment:
                           //                   MainAxisAlignment.center,
@@ -584,7 +591,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                           //                   borderRadius:
                           //                       BorderRadius.circular(20),
                           //                   border: Border.all(
-                          //                       color: Colors.orange),
+                          //                       color: backendColor),
                           //                   boxShadow: [
                           //                     BoxShadow(
                           //                         color: Colors.grey.shade200,
@@ -597,7 +604,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                           //                   child: Text(
                           //                 "Decline",
                           //                 style: TextStyle(
-                          //                     color: Colors.orange,
+                          //                     color: backendColor,
                           //                     fontSize: 10),
                           //               ))),
                           //         ),
@@ -734,7 +741,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 14),
                     decoration: ShapeDecoration(
-                      color: Color(0xFFFF6701),
+                      color: backendColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

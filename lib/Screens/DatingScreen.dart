@@ -416,7 +416,7 @@
 //                                   '${_sliderValue.round()} miles',
 //                                   textAlign: TextAlign.right,
 //                                   style: TextStyle(
-//                                     color: Color(0xFFFF6701),
+//                                     color: backendColor,
 //                                     fontSize: 14,
 //                                     fontFamily: 'Helvetica',
 //                                     fontWeight: FontWeight.w700,
@@ -455,7 +455,7 @@
 //                                   '${_ageRange.start.round()} - ${_ageRange.end.round()}',
 //                                   textAlign: TextAlign.right,
 //                                   style: TextStyle(
-//                                     color: Color(0xFFFF6701),
+//                                     color: backendColor,
 //                                     fontSize: 14,
 //                                     fontFamily: 'Helvetica',
 //                                     fontWeight: FontWeight.w700,
@@ -533,7 +533,7 @@
 //                             padding: const EdgeInsets.symmetric(
 //                                 horizontal: 10, vertical: 18),
 //                             decoration: ShapeDecoration(
-//                               color: Color(0xFFFF6701),
+//                               color: backendColor,
 //                               shape: RoundedRectangleBorder(
 //                                 borderRadius: BorderRadius.circular(12),
 //                               ),

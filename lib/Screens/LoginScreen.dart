@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:koram_app/Helper/CommonWidgets.dart';
 import 'package:koram_app/Helper/Helper.dart';
+import 'package:koram_app/Helper/color.dart';
 import 'package:koram_app/Screens/BoardingScreen.dart';
 import 'package:koram_app/Screens/OtpScreen.dart';
 
@@ -92,6 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _getCountry();
     requestNotificationPermission();
   }
+
   Future<void> requestNotificationPermission() async {
     PermissionStatus status = await Permission.notification.status;
     if (status != PermissionStatus.granted) {
@@ -113,26 +116,29 @@ class _LoginScreenState extends State<LoginScreen> {
         final Map<String, dynamic> data = json.decode(response.body);
         log("country data ${data}");
         setState(() {
-
           code = CountryCode.fromDialCode(data["country_calling_code"]) ?? code;
           isGettingCountry = false;
-
         });
       } else {
+        
+        Locale locale = PlatformDispatcher.instance.locale;
+        String? countryCodeString = locale.countryCode;
+
         setState(() {
+          code = CountryCode.fromCode(countryCodeString ?? "IN")!;
           isGettingCountry = false;
         });
-        CommanWidgets().showSnackBar(
-            context,
-            "Unable to get your Country code Please select it Manually ",
-            Colors.deepOrange);
-        print('Failed to get country: ${response.statusCode}');
+        // CommanWidgets().showSnackBar(
+        //     context,
+        //     "Unable to get your Country code Please select it Manually ",
+        //     Colors.deepOrange);
+        // print('Failed to get country: ${response.statusCode}');
       }
     } catch (e) {
       CommanWidgets().showSnackBar(
           context,
           "Unable to get your Country code Please select it Manually ",
-          Colors.deepOrange);
+          backendColor);
 
       setState(() {
         isGettingCountry = false;
@@ -316,7 +322,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 TextSpan(
                                   text: 'Phone Number',
                                   style: TextStyle(
-                                    color: Color(0xFFFF6701),
+                                    color: backendColor,
                                     fontSize: 24,
                                     fontFamily: 'Helvetica',
                                     fontWeight: FontWeight.w700,
@@ -396,13 +402,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 child: isGettingCountry
                                     ? Container(
-                                  height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                          color: Colors.deepOrange,
-                                        strokeWidth: 3,
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: backendColor,
+                                          strokeWidth: 3,
                                         ),
-                                    )
+                                      )
                                     : Row(
                                         children: [
                                           Padding(
@@ -563,7 +569,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 18),
                               decoration: ShapeDecoration(
-                                color: Color(0xFFFF6701),
+                                color: backendColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -607,7 +613,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //       style: TextButton.styleFrom(
                 //
                 //           primary: Colors.white,
-                //           backgroundColor: Colors.orangeAccent,
+                //           backgroundColor: backendColorAccent,
                 //           shape: RoundedRectangleBorder(
                 //               borderRadius: BorderRadius.circular(20)))),
                 // ),

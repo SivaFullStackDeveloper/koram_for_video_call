@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +23,7 @@ class GroupMessageWidget extends StatefulWidget {
 
 class _GroupMessageWidgetState extends State<GroupMessageWidget> {
   String formattedTime = "";
-  int count=0;
+  int count = 0;
   BoxShadow Shadoww = BoxShadow(
     color: Colors.grey.withOpacity(0.2),
     spreadRadius: 1,
@@ -33,7 +33,7 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
   var _controller;
   var _chewieController;
   late double spaceWidth;
-  bool isFileType= false;
+  bool isFileType = false;
   bool isLoading = true;
   String fileType = "";
   var thumbnailBytes;
@@ -61,20 +61,17 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
     }
   }
 
-
   @override
   void initState() {
     isLoading = true;
- if(widget.messageData.fileName == null || widget.messageData.fileName=="")
- {
-   isFileType=false;
- }else
- {
-   setState(() {
-     isFileType=true;
-   });
-
- }
+    if (widget.messageData.fileName == null ||
+        widget.messageData.fileName == "") {
+      isFileType = false;
+    } else {
+      setState(() {
+        isFileType = true;
+      });
+    }
     // Format the time using intl package
     formattedTime = DateFormat.jm().format(widget.messageData.sentTime);
     if (widget.messageData.message.characters.length > 31) {
@@ -127,7 +124,6 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
     return uint8list!;
   }
 
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -139,7 +135,6 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
     super.dispose();
   }
 
-
   Widget FileShowWidget(String Type) {
     switch (Type) {
       case 'Image':
@@ -150,32 +145,31 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return
-                    AlertDialog(
-                      // actions: [TextButton(onPressed: (){Navigator.pop(context);}, child: Text("X"))],
-                      actionsAlignment: MainAxisAlignment.start,
-                      scrollable: true,
-                      title: GestureDetector(
-                          onTap:(){
-                            Navigator.pop(context);
-                          },child: Text("Close")),
+                  return AlertDialog(
+                    // actions: [TextButton(onPressed: (){Navigator.pop(context);}, child: Text("X"))],
+                    actionsAlignment: MainAxisAlignment.start,
+                    scrollable: true,
+                    title: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Close")),
 
-                      titleTextStyle: TextStyle(fontSize: 15,color: Colors.red),
-                      titlePadding: EdgeInsets.fromLTRB(5,10, 5,5),
-                      contentPadding: EdgeInsets.fromLTRB(5,0, 5,5),
-                      content: Container(
-                        width: 200,
-                        height: 200,
+                    titleTextStyle: TextStyle(fontSize: 15, color: Colors.red),
+                    titlePadding: EdgeInsets.fromLTRB(5, 10, 5, 5),
+                    contentPadding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                    content: Container(
+                      width: 200,
+                      height: 200,
 
-                        // width: MediaQuery.of(context).size.width-30,
-                        child: CachedNetworkImage( imageUrl: G.HOST +
-                            "api/v1/images/" +
-                            widget.messageData.fileName.toString(),
-                            filterQuality: FilterQuality.medium
-
-                        ),
-                      ),
-                    );
+                      // width: MediaQuery.of(context).size.width-30,
+                      child: CachedNetworkImage(
+                          imageUrl: G.HOST +
+                              "api/v1/images/" +
+                              widget.messageData.fileName.toString(),
+                          filterQuality: FilterQuality.medium),
+                    ),
+                  );
                   //   Container(
                   //   // width: MediaQuery.of(context).size.width-30,
                   //   child: Image.network(G.HOST +
@@ -209,25 +203,20 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
                 ),
               ),
               width: MediaQuery.of(context).size.width / 2,
-              child: CachedNetworkImage(imageUrl:  G.HOST +
-                  "api/v1/images/" +
-                  widget.messageData.fileName.toString(),
+              child: CachedNetworkImage(
+                imageUrl: G.HOST +
+                    "api/v1/images/" +
+                    widget.messageData.fileName.toString(),
                 filterQuality: FilterQuality.low,
-                imageBuilder: (context, imageProvider){
-
-                   count++;
-
-
-
+                imageBuilder: (context, imageProvider) {
+                  count++;
 
                   // if(widget.totalMessageCount==widget.currentIndex+1)
                   // {  log("image builderr ${widget.totalMessageCount} indexx ${widget.currentIndex}");
                   //
                   // }
-                 return Image(image: imageProvider);
+                  return Image(image: imageProvider);
                 },
-
-
               ),
             ),
           );
@@ -277,19 +266,19 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
                 child: isLoading
                     ? SizedBox(height: 10, child: CircularProgressIndicator())
                     : SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Center(child: Text("Video")))
-              // Stack(children: [Icon().,Image.memory(thumbnailBytes)]), // Display the thumbnail
+                        width: 50,
+                        height: 50,
+                        child: Center(child: Text("Video")))
+                // Stack(children: [Icon().,Image.memory(thumbnailBytes)]), // Display the thumbnail
 
-              // Padding(
-              //
-              //     padding: const EdgeInsets.all(8.0),
-              //     child: Text("video")
-              //
-              //
-              // ),
-            ),
+                // Padding(
+                //
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Text("video")
+                //
+                //
+                // ),
+                ),
           );
 
           Text("video");
@@ -335,7 +324,6 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     bool sentByMe = widget.messageData.sentFrom == G.userPhoneNumber;
@@ -354,7 +342,7 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
         //           //         bottomRight: Radius.circular(20),
         //           //         topLeft: Radius.circular(20),
         //           //         bottomLeft: Radius.circular(20)),
-        //           //     color: Colors.orange),
+        //           //     color: backendColor),
         //           decoration: ShapeDecoration(
         //             color:  Color(0xFFFFEADC),
         //             shape: RoundedRectangleBorder(
@@ -428,7 +416,7 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
         //                 child: Text(
         //                   widget.messageData.senderPublicName,
         //                   style: TextStyle(
-        //                     color: Color(0xFFFF6701),
+        //                     color: backendColor,
         //                     fontSize: 12,
         //                     fontFamily: 'Poppins',
         //                     fontWeight: FontWeight.w500,
@@ -466,186 +454,183 @@ class _GroupMessageWidgetState extends State<GroupMessageWidget> {
         //   );
 
         ? Padding(
-      padding: const EdgeInsets.only(right: 20, top: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          isFileType
-              ? Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: FileShowWidget(fileType),
+            padding: const EdgeInsets.only(right: 20, top: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                isFileType
+                    ? Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: FileShowWidget(fileType),
+                      )
+                    : Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 250.0, // Set your maximum width here
+                        ),
+                        padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                        // margin: EdgeInsets.only(right: 20, bottom: 4),
+                        decoration: ShapeDecoration(
+                          color: backendColor,
+                          shadows: [Shadoww],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                            ),
+                          ),
+                        ),
+                        child: Stack(
+                          clipBehavior: Clip.hardEdge,
+                          children: [
+                            RichText(
+                                text: TextSpan(
+                                    text: widget.messageData.message,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontFamily: 'Helvetica',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    children: [
+                                  WidgetSpan(
+                                      child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                        width: 60,
+                                      )
+                                    ],
+                                  ))
+                                ])),
+                            Positioned(
+                              right: -1,
+                              bottom: -5,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    formattedTime,
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                      color: Color(0xFFFFEADC),
+                                      fontSize: 10,
+                                      fontFamily: 'Helvetica',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  // widget.messageData.isDelivered
+                                  //     ?
+                                  // Text("DELIVERED"):Text("SEEN ")
+                                  // SvgPicture.asset("assets/blueTick.svg")
+                                  //     :
+                                  SvgPicture.asset("assets/whiteTick.svg")
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     Text(
+                //       messageData.time.toString().substring(11, 16),
+                //       textAlign: TextAlign.end,
+                //       style: TextStyle(
+                //         color: Color(0xFF707070),
+                //         fontSize: 10,
+                //         fontFamily: 'Helvetica',
+                //         fontWeight: FontWeight.w400,
+                //         height: 1.60,
+                //       ),
+                //     ),
+                //     SizedBox(
+                //       width: 4,
+                //     ),
+                //     SvgPicture.asset("assets/ReadCheck.svg")
+                //   ],
+                // ),
+              ],
+            ),
           )
-              : Container(
-            constraints: BoxConstraints(
-              maxWidth: 250.0, // Set your maximum width here
-            ),
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-            // margin: EdgeInsets.only(right: 20, bottom: 4),
-            decoration: ShapeDecoration(
-              color: Color(0xFFFF6701),
-              shadows: [Shadoww],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-            ),
-            child: Stack(
-              clipBehavior: Clip.hardEdge,
-              children: [
-                RichText(
-                    text: TextSpan(
-                        text: widget.messageData.message,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontFamily: 'Helvetica',
-                          fontWeight: FontWeight.w400,
-                        ),
-                        children: [
-                          WidgetSpan(
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                    width: 60,
-                                  )
-                                ],
-                              ))
-                        ])),
-                Positioned(
-                  right: -1,
-                  bottom: -5,
-                  child: Row(
-                    children: [
-                      Text(
-                        formattedTime,
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          color: Color(0xFFFFEADC),
-                          fontSize: 10,
-                          fontFamily: 'Helvetica',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      // widget.messageData.isDelivered
-                      //     ?
-                      // Text("DELIVERED"):Text("SEEN ")
-                      // SvgPicture.asset("assets/blueTick.svg")
-                      //     :
-                    SvgPicture.asset("assets/whiteTick.svg")
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: [
-          //     Text(
-          //       messageData.time.toString().substring(11, 16),
-          //       textAlign: TextAlign.end,
-          //       style: TextStyle(
-          //         color: Color(0xFF707070),
-          //         fontSize: 10,
-          //         fontFamily: 'Helvetica',
-          //         fontWeight: FontWeight.w400,
-          //         height: 1.60,
-          //       ),
-          //     ),
-          //     SizedBox(
-          //       width: 4,
-          //     ),
-          //     SvgPicture.asset("assets/ReadCheck.svg")
-          //   ],
-          // ),
-        ],
-      ),
-    )
         : Padding(
-      padding: const EdgeInsets.only(
-        left: 20,
-        top: 12,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-        Text(widget.messageData.senderPublicName,style: TextStyle(fontSize: 11)),
-
-          isFileType?
-
-               FileShowWidget(fileType)
-              : Container(
-            constraints: BoxConstraints(
-              maxWidth: 250.0, // Set your maximum width here
+            padding: const EdgeInsets.only(
+              left: 20,
+              top: 12,
             ),
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-            decoration: ShapeDecoration(
-              color: Color(0xFFF2F2F2),
-              shadows: [Shadoww],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-            ),
-            child: Stack(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-
-                Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 228.0, // Set your maximum width here
-                  ),
-                  child: RichText(
-                    text: TextSpan(
-                        text: "${widget.messageData.message}",
-                        style: TextStyle(
-                          color: Color(0xFF303030),
-                          fontSize: 14,
-                          fontFamily: 'Helvetica',
-                          fontWeight: FontWeight.w400,
+                Text(widget.messageData.senderPublicName,
+                    style: TextStyle(fontSize: 11)),
+                isFileType
+                    ? FileShowWidget(fileType)
+                    : Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 250.0, // Set your maximum width here
                         ),
-                        children: [
-                          WidgetSpan(
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                    width: 50,
-                                  )
-                                ],
-                              ))
-                        ]),
-                  ),
-                ),
-                Positioned(
-                  bottom: -2,
-                  right: -8,
-                  child: Container(
-                    // color: Colors.red,
-                    width: 50,
-                    child: Text(
-                      formattedTime.toString(),
-                      style: TextStyle(
-                        color: Color(0xFF707070),
-                        fontSize: 10,
-                        fontFamily: 'Helvetica',
-                        fontWeight: FontWeight.w400,
+                        padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                        decoration: ShapeDecoration(
+                          color: Color(0xFFF2F2F2),
+                          shadows: [Shadoww],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                            ),
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 228.0, // Set your maximum width here
+                              ),
+                              child: RichText(
+                                text: TextSpan(
+                                    text: "${widget.messageData.message}",
+                                    style: TextStyle(
+                                      color: Color(0xFF303030),
+                                      fontSize: 14,
+                                      fontFamily: 'Helvetica',
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    children: [
+                                      WidgetSpan(
+                                          child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 10,
+                                            width: 50,
+                                          )
+                                        ],
+                                      ))
+                                    ]),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: -2,
+                              right: -8,
+                              child: Container(
+                                // color: Colors.red,
+                                width: 50,
+                                child: Text(
+                                  formattedTime.toString(),
+                                  style: TextStyle(
+                                    color: Color(0xFF707070),
+                                    fontSize: 10,
+                                    fontFamily: 'Helvetica',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }

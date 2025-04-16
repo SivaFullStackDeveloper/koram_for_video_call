@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:koram_app/Screens/DatingUserHeight.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:koram_app/Helper/color.dart';
 import '../Helper/CommonDatingWidgets.dart';
 import '../Helper/Helper.dart';
 
@@ -26,10 +26,11 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
   var SelectedSmokeOption;
   @override
   void initState() {
-    SelectedSmokeOption =  "Frequently";
+    SelectedSmokeOption = "Frequently";
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -94,7 +95,6 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
                           )),
                     ],
                   ),
-
                   SizedBox(
                     height: 30,
                   ),
@@ -105,7 +105,7 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               setState(() {
                                 SelectedSmokeOption = i;
                               });
@@ -129,8 +129,8 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
                               //   ),
                               // ),
                               child: Padding(
-                                padding:
-                                const EdgeInsets.only(left: 24.0, right: 24),
+                                padding: const EdgeInsets.only(
+                                    left: 24.0, right: 24),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -139,7 +139,7 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
                                       '$i',
                                       style: TextStyle(
                                         color: SelectedSmokeOption == i
-                                            ? Color(0xFFFF6701)
+                                            ? backendColor
                                             : Colors.black,
                                         fontSize: 14,
                                         fontFamily: 'Helvetica',
@@ -162,7 +162,6 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
                             ),
                           ),
                         ),
-
                     ],
                   )
                 ],
@@ -173,13 +172,14 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
         bottomSheet: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
           child: GestureDetector(
-              onTap: () async{
-
+              onTap: () async {
                 String uploadUrl = G.HOST + "api/v1/insertDatingDetails";
-                var response =
-                    await http.post(Uri.parse(uploadUrl),body: {"phone_number": G.userPhoneNumber,"insertType":"doYouSmoke","doYouSmoke":SelectedSmokeOption});
+                var response = await http.post(Uri.parse(uploadUrl), body: {
+                  "phone_number": G.userPhoneNumber,
+                  "insertType": "doYouSmoke",
+                  "doYouSmoke": SelectedSmokeOption
+                });
                 if (response.statusCode == 200) {
-
                   log("inside success of edit ");
 
                   Navigator.of(context)
@@ -189,16 +189,14 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
                 } else {
                   await CommonDatingWidgets().errorDialog(context);
                 }
-
-
               },
               child: Container(
                 width: 350,
                 height: 54,
                 padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                 decoration: ShapeDecoration(
-                  color: Color(0xFFFF6701),
+                  color: backendColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -221,10 +219,7 @@ class _DatingDoyouSmokeState extends State<DatingDoyouSmoke> {
                     ),
                   ],
                 ),
-              )
-
-
-          ),
+              )),
         ),
       ),
     );

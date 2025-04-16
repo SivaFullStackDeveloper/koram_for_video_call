@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart';
 import 'package:koram_app/Helper/RuntimeStorage.dart';
-
+import 'package:koram_app/Helper/color.dart';
 class ChatRoomCard extends StatelessWidget {
   final String title;
   final String image;
@@ -31,7 +31,7 @@ class ChatRoomCard extends StatelessWidget {
         },
         child: Container(
           // width: MediaQuery.of(context).size.width/1,
-          height: MediaQuery.of(context).size.height/6.2,
+          height: MediaQuery.of(context).size.height / 6.2,
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
@@ -65,8 +65,7 @@ class ChatRoomCard extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 17, 0, 12),
-                          child:
-                          Row(children: [
+                          child: Row(children: [
                             Container(
                               child: Text(
                                 title,
@@ -81,7 +80,6 @@ class ChatRoomCard extends StatelessWidget {
                             ),
 
                             Container(
-
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 6, vertical: 2),
                               decoration: ShapeDecoration(
@@ -101,7 +99,8 @@ class ChatRoomCard extends StatelessWidget {
                                     decoration: ShapeDecoration(
                                       color: Color(0xFF22BC3D),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5.50),
+                                        borderRadius:
+                                            BorderRadius.circular(5.50),
                                       ),
                                     ),
                                   ),
@@ -183,27 +182,29 @@ class ChatRoomCard extends StatelessWidget {
                       height: 10,
                     ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         change();
                       },
                       child: Container(
                         child: Column(
                           children: [
-
                             Text(
                               'Explore Now',
                               style: TextStyle(
-
-                                color: Color(0xFFFF6701),
+                                color: backendColor,
                                 fontSize: 10,
                                 fontFamily: 'Helvetica',
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-
                             Padding(
-                              padding: const EdgeInsets.only(top:2.0),
-                              child: Container( width:55,child: Divider(height: 2,color: RuntimeStorage().PrimaryOrange,thickness: 1)),
+                              padding: const EdgeInsets.only(top: 2.0),
+                              child: Container(
+                                  width: 55,
+                                  child: Divider(
+                                      height: 2,
+                                      color: RuntimeStorage().PrimaryOrange,
+                                      thickness: 1)),
                             ),
                           ],
                         ),
@@ -231,22 +232,22 @@ class ChatRoomCard extends StatelessWidget {
                     //           //   left: BorderSide(
                     //           //     width: 0,
                     //           //     strokeAlign: BorderSide.strokeAlignOutside,
-                    //           //     color: Color(0xFFFF6701),
+                    //           //     color: backendColor,
                     //           //   ),
                     //           //   top: BorderSide(
                     //           //     width: 0,
                     //           //     strokeAlign: BorderSide.strokeAlignOutside,
-                    //           //     color: Color(0xFFFF6701),
+                    //           //     color: backendColor,
                     //           //   ),
                     //           //   right: BorderSide(
                     //           //     width: 0,
                     //           //     strokeAlign: BorderSide.strokeAlignOutside,
-                    //           //     color: Color(0xFFFF6701),
+                    //           //     color: backendColor,
                     //           //   ),
                     //           //   bottom: BorderSide(
                     //           //     width: 1,
                     //           //     strokeAlign: BorderSide.strokeAlignOutside,
-                    //           //     color: Color(0xFFFF6701),
+                    //           //     color: backendColor,
                     //           //   ),
                     //           // ),
                     //         ),
@@ -257,7 +258,7 @@ class ChatRoomCard extends StatelessWidget {
                     //               'Explore Now',
                     //               style: TextStyle(
                     //
-                    //                 color: Color(0xFFFF6701),
+                    //                 color: backendColor,
                     //                 fontSize: 10,
                     //                 fontFamily: 'Helvetica',
                     //                 fontWeight: FontWeight.w700,
@@ -279,10 +280,10 @@ class ChatRoomCard extends StatelessWidget {
                     // )
                   ],
                 ),
-                 Padding(
-                   padding: const EdgeInsets.fromLTRB(0, 20, 10, 20),
-                   child: SvgPicture.asset(image),
-                 )
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 10, 20),
+                  child: SvgPicture.asset(image),
+                )
               ],
             ),
           ),

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,8 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
         //   _page = 2;
         // });
         // navigateAnimation(2,true);
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return BoardingScreen();
         }));
       });
@@ -110,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       //       child: Text("Get Started"),
                       //       style: TextButton.styleFrom(
                       //           primary: Colors.white,
-                      //           backgroundColor: Colors.orangeAccent,
+                      //           backgroundColor: orangePrimaryAccent,
                       //           shape: RoundedRectangleBorder(
                       //               borderRadius: BorderRadius.circular(20)))),
                       // ),
@@ -147,7 +146,7 @@ systemNavigationBarContrastEnforced: true
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top:27.0),
+                          padding: const EdgeInsets.only(top: 27.0),
                           child: SizedBox(
                             width: 289,
                             child: Text(
@@ -167,8 +166,9 @@ systemNavigationBarContrastEnforced: true
 
                         GestureDetector(
                           onTap: () {
-
-                            navigateToPGAnimation(LoginScreen(ispoped: false,));
+                            navigateToPGAnimation(LoginScreen(
+                              ispoped: false,
+                            ));
 
                             // Navigator.of(context)
                             //     .push(MaterialPageRoute(builder: (context) {
@@ -233,10 +233,7 @@ systemNavigationBarContrastEnforced: true
                                     gradient: LinearGradient(
                                       begin: Alignment(1.00, 0.08),
                                       end: Alignment(-1, -0.08),
-                                      colors: [
-                                        Color(0xFFFF6701),
-                                        Color(0xFFFF8D41)
-                                      ],
+                                      colors: [backendColor, Color(0xFFFF8D41)],
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(34),
@@ -285,10 +282,8 @@ systemNavigationBarContrastEnforced: true
                         //   return LoginScreen();
                         // }));
 
-                        navigateAnimation(3,true);
-                        },
-
-
+                        navigateAnimation(3, true);
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -298,7 +293,7 @@ systemNavigationBarContrastEnforced: true
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 18),
                             decoration: ShapeDecoration(
-                              color: Color(0xFFFF6701),
+                              color: backendColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -380,7 +375,9 @@ systemNavigationBarContrastEnforced: true
                         Expanded(child: SizedBox()),
                         GestureDetector(
                           onTap: () {
-                            navigateToPGAnimation(LoginScreen(ispoped: false,));
+                            navigateToPGAnimation(LoginScreen(
+                              ispoped: false,
+                            ));
 
                             // Navigator.of(context)
                             //     .push(MaterialPageRoute(builder: (context) {
@@ -449,10 +446,7 @@ systemNavigationBarContrastEnforced: true
                                     gradient: LinearGradient(
                                       begin: Alignment(1.00, 0.08),
                                       end: Alignment(-1, -0.08),
-                                      colors: [
-                                        Color(0xFFFF6701),
-                                        Color(0xFFFF8D41)
-                                      ],
+                                      colors: [backendColor, Color(0xFFFF8D41)],
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(34),
@@ -470,10 +464,7 @@ systemNavigationBarContrastEnforced: true
                                     gradient: LinearGradient(
                                       begin: Alignment(1.00, 0.08),
                                       end: Alignment(-1, -0.08),
-                                      colors: [
-                                        Color(0xFFFF6701),
-                                        Color(0xFFFF8D41)
-                                      ],
+                                      colors: [backendColor, Color(0xFFFF8D41)],
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(34),
@@ -516,7 +507,8 @@ systemNavigationBarContrastEnforced: true
                           child: Container(
                             width: 100,
                             height: 54,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 18),
                             decoration: ShapeDecoration(
                               color: Color(0xFFF2F2F2),
                               shape: RoundedRectangleBorder(
@@ -550,7 +542,7 @@ systemNavigationBarContrastEnforced: true
                             //   return PrivarteProfileScreen();
                             // }));
 
-                            navigateAnimation(4,true);
+                            navigateAnimation(4, true);
 
                             // setState(() {
                             //   _page = 4;
@@ -559,9 +551,10 @@ systemNavigationBarContrastEnforced: true
                           child: Container(
                             width: 100,
                             height: 54,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 18),
                             decoration: ShapeDecoration(
-                              color: Color(0xFFFF6701),
+                              color: backendColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -664,7 +657,9 @@ systemNavigationBarContrastEnforced: true
                         ),
                       ),
                     ),
-                  SizedBox(height: 65,) ,
+                    SizedBox(
+                      height: 65,
+                    ),
                     Container(
                       width: width,
                       // height: height * .7,
@@ -692,10 +687,7 @@ systemNavigationBarContrastEnforced: true
                                     gradient: LinearGradient(
                                       begin: Alignment(1.00, 0.08),
                                       end: Alignment(-1, -0.08),
-                                      colors: [
-                                        Color(0xFFFF6701),
-                                        Color(0xFFFF8D41)
-                                      ],
+                                      colors: [backendColor, Color(0xFFFF8D41)],
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(34),
@@ -713,10 +705,7 @@ systemNavigationBarContrastEnforced: true
                                     gradient: LinearGradient(
                                       begin: Alignment(1.00, 0.08),
                                       end: Alignment(-1, -0.08),
-                                      colors: [
-                                        Color(0xFFFF6701),
-                                        Color(0xFFFF8D41)
-                                      ],
+                                      colors: [backendColor, Color(0xFFFF8D41)],
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(34),
@@ -734,10 +723,7 @@ systemNavigationBarContrastEnforced: true
                                     gradient: LinearGradient(
                                       begin: Alignment(1.00, 0.08),
                                       end: Alignment(-1, -0.08),
-                                      colors: [
-                                        Color(0xFFFF6701),
-                                        Color(0xFFFF8D41)
-                                      ],
+                                      colors: [backendColor, Color(0xFFFF8D41)],
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(34),
@@ -756,7 +742,9 @@ systemNavigationBarContrastEnforced: true
                         // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                         //   return PublicProfileScreen();
                         // }));
-                        navigateToPGAnimation( LoginScreen(ispoped: false,));
+                        navigateToPGAnimation(LoginScreen(
+                          ispoped: false,
+                        ));
 
                         // Navigator.of(context)
                         //     .push(MaterialPageRoute(builder: (context) {
@@ -772,7 +760,7 @@ systemNavigationBarContrastEnforced: true
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 18),
                               decoration: ShapeDecoration(
-                                color: Color(0xFFFF6701),
+                                color: backendColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -820,9 +808,7 @@ systemNavigationBarContrastEnforced: true
     return getScreen(height, width);
   }
 
-  navigateAnimation(int page_number,bool forward)
-  {
-
+  navigateAnimation(int page_number, bool forward) {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
@@ -831,19 +817,16 @@ systemNavigationBarContrastEnforced: true
           // });
           return SplashScreen(page_number);
         },
-
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0);
           const end = Offset.zero;
           const curve = Curves.easeOutQuint;
-          Animatable< Offset> tween;
-          if(forward)
-          {
-            tween =Tween(begin: begin, end: end).chain(
+          Animatable<Offset> tween;
+          if (forward) {
+            tween = Tween(begin: begin, end: end).chain(
               CurveTween(curve: curve),
             );
-          }else
-          {
+          } else {
             tween = Tween(begin: end, end: begin).chain(
               CurveTween(curve: curve),
             );
@@ -857,15 +840,11 @@ systemNavigationBarContrastEnforced: true
           );
         },
         transitionDuration: const Duration(milliseconds: 1000),
-
       ),
     );
   }
 
-
-  navigateToPGAnimation(Widget w)
-  {
-
+  navigateToPGAnimation(Widget w) {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
@@ -888,26 +867,30 @@ systemNavigationBarContrastEnforced: true
           return SlideTransition(
             position: offsetAnimation,
             child: child,
-
           );
-
         },
       ),
     );
   }
 
-  Widget SkipWidget()
-  { return
-    TextButton(onPressed: (){navigateToPGAnimation(LoginScreen(ispoped: false,));},  child: Text(
-      'Skip',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: Color(0xFF007FFF),
-        fontSize: 14,
-        fontFamily: 'Helvetica',
-        fontWeight: FontWeight.w400,
-        height: 0.12,
+  Widget SkipWidget() {
+    return TextButton(
+      onPressed: () {
+        navigateToPGAnimation(LoginScreen(
+          ispoped: false,
+        ));
+      },
+      child: Text(
+        'Skip',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Color(0xFF007FFF),
+          fontSize: 14,
+          fontFamily: 'Helvetica',
+          fontWeight: FontWeight.w400,
+          height: 0.12,
+        ),
       ),
-    ),);
+    );
   }
 }

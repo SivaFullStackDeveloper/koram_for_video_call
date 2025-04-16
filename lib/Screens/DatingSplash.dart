@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'DatingPhotos.dart';
-
+import 'package:koram_app/Helper/color.dart';
 class DatingSplash extends StatefulWidget {
   const DatingSplash({key});
 
@@ -12,10 +11,8 @@ class DatingSplash extends StatefulWidget {
 }
 
 class _DatingSplashState extends State<DatingSplash> {
-
   @override
   Widget build(BuildContext context) {
-
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -45,8 +42,9 @@ class _DatingSplashState extends State<DatingSplash> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
-                    child: GestureDetector(child: SvgPicture.asset("assets/CaretLeft.svg"),
-                      onTap: (){
+                    child: GestureDetector(
+                      child: SvgPicture.asset("assets/CaretLeft.svg"),
+                      onTap: () {
                         Navigator.pop(context);
                       },
                     ),
@@ -55,8 +53,7 @@ class _DatingSplashState extends State<DatingSplash> {
                     children: [
                       Padding(
                           padding: const EdgeInsets.only(top: 14.0),
-                          child:
-                          SizedBox(
+                          child: SizedBox(
                             width: 289,
                             child: Text.rich(
                               TextSpan(
@@ -64,11 +61,10 @@ class _DatingSplashState extends State<DatingSplash> {
                                   TextSpan(
                                     text: 'Find your \n',
                                     style: TextStyle(
-                                      color: Color(0xFFFF6701),
+                                      color: backendColor,
                                       fontSize: 34,
                                       fontFamily: 'Helvetica',
                                       fontWeight: FontWeight.w700,
-
                                       letterSpacing: -0.41,
                                     ),
                                   ),
@@ -85,8 +81,7 @@ class _DatingSplashState extends State<DatingSplash> {
                                 ],
                               ),
                             ),
-                          )
-                      ),
+                          )),
                     ],
                   ),
                   Padding(
@@ -115,13 +110,11 @@ class _DatingSplashState extends State<DatingSplash> {
             ),
           ),
         ),
-        bottomSheet:  Padding(
+        bottomSheet: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: GestureDetector(
             onTap: () {
-
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return DatingPhotos();
               }));
             },
@@ -136,7 +129,7 @@ class _DatingSplashState extends State<DatingSplash> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 18),
                       decoration: ShapeDecoration(
-                        color: Color(0xFFFF6701),
+                        color: backendColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -161,5 +154,4 @@ class _DatingSplashState extends State<DatingSplash> {
       ),
     );
   }
-
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:flutter/material.dart';
 import 'package:koram_app/Helper/Helper.dart';
 
@@ -52,7 +52,7 @@ class StatusPainter extends CustomPainter {
     double arc = 360 / 6;
 
     for (int i = 0; i < 10; i++) {
-      paint.color = Colors.orange;
+      paint.color = backendColor;
       canvas.drawArc(Rect.fromLTWH(0, 0, size.width, size.height),
           degreeToAngle(degree + 4), degreeToAngle(arc - 8), false, paint);
       degree += arc;

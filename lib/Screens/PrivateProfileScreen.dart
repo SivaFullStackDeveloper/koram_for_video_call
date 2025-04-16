@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'dart:io';
-
+import 'package:koram_app/Helper/color.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -68,8 +68,8 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
   bool isprofile = false;
   ImagePicker picker = ImagePicker();
   File? tempImagePrivate;
-  var lat=0.0;
-  var long=0.0;
+  var lat = 0.0;
+  var long = 0.0;
   _focusListener() {
     setState(() {});
   }
@@ -144,49 +144,40 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
     super.initState();
   }
 
-
-  assignLatLong()async
-  {
-
-
+  assignLatLong() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Request user to enable location services
       serviceEnabled = await Geolocator.openLocationSettings();
       if (!serviceEnabled) {
-    log("from private profile  service in not enabled");
-
+        log("from private profile  service in not enabled");
       } else {
-
         Position position = await LocationService().getCurrentLocation();
         lat = position.latitude;
         long = position.longitude;
         await Provider.of<UsersProviderClass>(context, listen: false)
-            .addLocation(position.latitude,
-            position.longitude);
+            .addLocation(position.latitude, position.longitude);
         log("The location service is turned on. from private profile screen");
       }
     } else {
-
-
       Position position = await LocationService().getCurrentLocation();
       lat = position.latitude;
       long = position.longitude;
 
-      await Provider.of<UsersProviderClass>(context, listen: false)
-          .addLocation(position.latitude,
-          position.longitude);
+     if(mounted){
+       await Provider.of<UsersProviderClass>(context, listen: false)
+          .addLocation(position.latitude, position.longitude);
+     }
       log("The location service is already on. from private profile screen");
     }
-
   }
+
   @override
   void dispose() {
     _focusNode.removeListener(_focusListener);
     _dobFocuseNode.removeListener(_focusListener);
 
-    if(_name!=null)
-    {
+    if (_name != null) {
       _name.dispose();
     }
     super.dispose();
@@ -209,34 +200,40 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
       return FileImage(File(tempImagePrivate!.path));
     }
   }
-@override
+
+  @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-  UsersProviderClass userModel =
-  Provider.of<UsersProviderClass>(context, listen: false);
+    UsersProviderClass userModel =
+        Provider.of<UsersProviderClass>(context, listen: false);
 
-  log("DATEOFBBBB" +userModel.LoggedUser!.dateofbirth.toString());
+    //log("DATEOFBBBB" + userModel.LoggedUser!.dateofbirth.toString());
 
+    if (widget.isFromHome) {
+      tempImagePrivate = null;
+      _nameController.text = userModel.LoggedUser!.privateName ?? "No Name";
+      if (userModel.LoggedUser!.dateofbirth != null ||
+          userModel.LoggedUser!.dateofbirth != "") {
+        UserDob = userModel.LoggedUser?.dateofbirth != null
+            ? DateTime.parse(userModel.LoggedUser!.dateofbirth!).toString()
+            : DateTime(1994, 4, 18).toString();
 
-  if (widget.isFromHome) {
-    tempImagePrivate = null;
-    _nameController.text = userModel.LoggedUser!.privateName!;
-    if (userModel.LoggedUser!.dateofbirth != null ||
-        userModel.LoggedUser!.dateofbirth != "") {
-      UserDob = DateTime.parse(userModel.LoggedUser!.dateofbirth!).toString();
-      initialDate = DateTime.parse(userModel.LoggedUser!.dateofbirth!);
-      log("userDOb${initialDate.toString()}");
+        initialDate = userModel.LoggedUser?.dateofbirth != null
+            ? DateTime.parse(userModel.LoggedUser!.dateofbirth!)
+            : DateTime(1994, 4, 18);
+
+        log("userDOb ${initialDate.toString()}");
+      }
+      genderValue = userModel.LoggedUser!.gender;
+      checked = true;
     }
-    genderValue =userModel.LoggedUser!.gender;
-    checked = true;
-  }
     super.didChangeDependencies();
   }
+
   @override
   Widget build(BuildContext context) {
     UsersProviderClass userModel =
         Provider.of<UsersProviderClass>(context, listen: false);
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -248,43 +245,44 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
           title: Container(
             width: 93,
             height: 5,
-            child:!widget.isFromHome?
-            Stack(
-              children: [
-                Positioned(
-                  left: 0,
-                  top: 0,
-                  child: Container(
-                    width: 44,
-                    height: 5,
-                    decoration: ShapeDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment(1.00, 0.08),
-                        end: Alignment(-1, -0.08),
-                        colors: [Color(0xFFFF6701), Color(0xFFFF8D41)],
+            child: !widget.isFromHome
+                ? Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        top: 0,
+                        child: Container(
+                          width: 44,
+                          height: 5,
+                          decoration: ShapeDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment(1.00, 0.08),
+                              end: Alignment(-1, -0.08),
+                              colors: [backendColor, Color(0xFFFF8D41)],
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(34),
+                            ),
+                          ),
+                        ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(34),
+                      Positioned(
+                        left: 49,
+                        top: 0,
+                        child: Container(
+                          width: 44,
+                          height: 5,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFFFEADC),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(34),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 49,
-                  top: 0,
-                  child: Container(
-                    width: 44,
-                    height: 5,
-                    decoration: ShapeDecoration(
-                      color: Color(0xFFFFEADC),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(34),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ):null,
+                    ],
+                  )
+                : null,
           ),
           leading: GestureDetector(
               onTap: () {
@@ -327,7 +325,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                         TextSpan(
                           text: 'Private Profile',
                           style: TextStyle(
-                            color: Color(0xFFFF6701),
+                            color: backendColor,
                             fontSize: 24,
                             fontFamily: 'Helvetica',
                             fontWeight: FontWeight.w700,
@@ -420,12 +418,16 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                                     ? CircleAvatar(
                                         backgroundImage:
                                             AssetImage("assets/profile.png"),
-                                        foregroundImage: FileImage(tempImagePrivate!),
+                                        foregroundImage:
+                                            FileImage(tempImagePrivate!),
                                         // onForegroundImageError: (){}AssetImage("assets/profile.png"),
                                         radius: 60,
                                         backgroundColor: Colors.grey[300],
                                       )
-                                    : widget.isFromHome
+                                    : widget.isFromHome &&
+                                            userModel.LoggedUser
+                                                    ?.privateProfilePicUrl !=
+                                                null
                                         ? CommanWidgets().cacheProfileDisplay(
                                             userModel.LoggedUser!
                                                 .privateProfilePicUrl!)
@@ -548,51 +550,86 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 7, 20, 16),
-                    child: DateTimeField(
-                      style: TextStyle(
-                        color: Color(0xFF303030),
-                        fontSize: 14,
-                        fontFamily: 'Helvetica',
-                        fontWeight: FontWeight.w700,
-                      ),
-                      initialValue: widget.isFromHome
-                          ? DateTime.parse(
-                              widget.userData.dateofbirth.toString())
-                          : initialDate,
-                      onChanged: (v) {
-                        setState(() {
-                          UserDob = v.toString();
-                        });
-                      },
-                      format: DateFormat("dd-MM-yyyy"),
-                      focusNode: _dobFocuseNode,
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.calendar_today),
-                          // Container(
-                          //     width: 10,
-                          //     height: 10,
-                          //     child: SvgPicture.asset("assets/calendar.svg")),
+                    child: 
+DateTimeField(
+  style: TextStyle(
+    color: Color(0xFF303030),
+    fontSize: 14,
+    fontFamily: 'Helvetica',
+    fontWeight: FontWeight.w700,
+  ),
+  initialValue: widget.isFromHome && widget.userData.dateofbirth != null
+      ? _parseDate(widget.userData.dateofbirth.toString())
+      : _defaultDate(),
+  onChanged: (v) {
+    setState(() {
+      UserDob = v.toString();
+    });
+  },
+  format: DateFormat("dd-MM-yyyy"),
+  focusNode: _dobFocuseNode,
+  decoration: InputDecoration(
+    suffixIcon: Icon(Icons.calendar_today),
+    border: _dobFocuseNode.hasFocus
+        ? OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.orange),
+            borderRadius: BorderRadius.circular(10))
+        : OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10))),
+  onShowPicker: (BuildContext context, DateTime? currentValue) async {
+    var date = await showDatePicker(
+        context: context,
+        firstDate: DateTime(1900),
+        initialDate: currentValue ?? DateTime.now(),
+        lastDate: DateTime.now());
+    return date ?? currentValue;
+  },
+),
+                    // DateTimeField(
+                    //   style: TextStyle(
+                    //     color: Color(0xFF303030),
+                    //     fontSize: 14,
+                    //     fontFamily: 'Helvetica',
+                    //     fontWeight: FontWeight.w700,
+                    //   ),
+                    //   initialValue: widget.isFromHome
+                    //       ? DateTime.parse(
+                    //           widget.userData.dateofbirth.toString())
+                    //       : initialDate,
+                    //   onChanged: (v) {
+                    //     setState(() {
+                    //       UserDob = v.toString();
+                    //     });
+                    //   },
+                    //   format: DateFormat("dd-MM-yyyy"),
+                    //   focusNode: _dobFocuseNode,
+                    //   decoration: InputDecoration(
+                    //       suffixIcon: Icon(Icons.calendar_today),
+                    //       // Container(
+                    //       //     width: 10,
+                    //       //     height: 10,
+                    //       //     child: SvgPicture.asset("assets/calendar.svg")),
 
-                          border: _dobFocuseNode.hasFocus
-                              ? OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.orange),
-                                  borderRadius: BorderRadius.circular(10))
-                              : OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                      onShowPicker:
-                          (BuildContext context, DateTime? currentValue) async {
-                        var date = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            initialDate: currentValue ?? DateTime.now(),
-                            lastDate: DateTime.now());
-                        if (date != null) {
-                          return date;
-                        } else {
-                          return currentValue;
-                        }
-                      },
-                    ),
+                    //       border: _dobFocuseNode.hasFocus
+                    //           ? OutlineInputBorder(
+                    //               borderSide: BorderSide(color: Colors.orange),
+                    //               borderRadius: BorderRadius.circular(10))
+                    //           : OutlineInputBorder(
+                    //               borderRadius: BorderRadius.circular(10))),
+                    //   onShowPicker:
+                    //       (BuildContext context, DateTime? currentValue) async {
+                    //     var date = await showDatePicker(
+                    //         context: context,
+                    //         firstDate: DateTime(1900),
+                    //         initialDate: currentValue ?? DateTime.now(),
+                    //         lastDate: DateTime.now());
+                    //     if (date != null) {
+                    //       return date;
+                    //     } else {
+                    //       return currentValue;
+                    //     }
+                    //   },
+                    // ),
                   ),
                 ),
               ]),
@@ -640,7 +677,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                                         '$i',
                                         style: TextStyle(
                                           color: genderValue == "$i"
-                                              ? Color(0xFFFF6701)
+                                              ? backendColor
                                               : Colors.black,
                                           fontSize: 14,
                                           fontFamily: 'Helvetica',
@@ -726,7 +763,9 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CircularProgressIndicator(),
+                                  CircularProgressIndicator(
+                                    color: backendColor,
+                                  ),
                                 ],
                               ),
                             ),
@@ -738,8 +777,8 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                       padding: const EdgeInsets.fromLTRB(20, 41, 20, 31),
                       child: GestureDetector(
                         onTap: () async {
-
-                          if (tempImagePrivate == null &&  widget.isFromHome==false) {
+                          if (tempImagePrivate == null &&
+                              widget.isFromHome == false) {
                             log("inside image null");
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               backgroundColor:
@@ -781,16 +820,15 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                               ),
                             ));
                             return;
-                          }else
-                          {
+                          } else {
                             log("user dob value ${UserDob}");
-                            int age =G().validateAge(DateTime.parse(UserDob));
+                            int age = G().validateAge(DateTime.parse(UserDob));
                             log("the age $age");
-                            if(age<18)
-                            {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            if (age < 18) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
                                 backgroundColor:
-                                Colors.red, // Set the background color
+                                    Colors.red, // Set the background color
                                 content: Text(
                                   "You must be at least 18 years old.",
                                   style: TextStyle(
@@ -799,8 +837,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                                 ),
                               ));
                               return;
-                            }else
-                            {
+                            } else {
                               log("age is greated than 18 $age");
                             }
                           }
@@ -839,7 +876,8 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                                 new http.MultipartRequest("POST", uri);
                             var multipartFile = new http.MultipartFile(
                                 'myFile', stream, length,
-                                filename: path.basename(tempImagePrivate!.path));
+                                filename:
+                                    path.basename(tempImagePrivate!.path));
                             request.files.add(multipartFile);
                             var response = await request.send();
                             response.stream
@@ -879,7 +917,6 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                                 lon: long,
                               );
                               await userModel.addUser(G.loggedinUser, true);
-
                             });
                             setState(() {
                               SendingData = false;
@@ -889,54 +926,49 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                             } else {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => PublicProfileScreen(
-                                    isFromHome: false,
-                                    userData: UserDetail(),
-                                  )));
+                                        isFromHome: false,
+                                        userData: UserDetail(),
+                                      )));
                             }
+                          } else if (widget.isFromHome &&
+                              tempImagePrivate == null) {
+                            log("no image change and from home  ");
+                            G.loggedinUser = UserDetail(
+                              ///private info
+                              privateName: _nameController.text,
+                              phoneNumber: G.userPhoneNumber,
+                              gender: genderValue,
+                              privateProfilePicUrl: widget.isFromHome
+                                  ? userModel.LoggedUser!.privateProfilePicUrl
+                                  : "",
+                              dateofbirth: UserDob,
+
+                              ///public info
+                              publicProfilePicUrl: widget.isFromHome
+                                  ? userModel.LoggedUser!.publicProfilePicUrl
+                                  : "",
+                              publicGender: widget.isFromHome
+                                  ? userModel.LoggedUser!.publicProfilePicUrl
+                                  : "",
+                              publicName: widget.isFromHome
+                                  ? userModel.LoggedUser!.publicName
+                                  : "",
+
+                              ///common
+                              noCodeNumber: widget.isFromHome
+                                  ? userModel.LoggedUser!.noCodeNumber
+                                  : "",
+                              role: "user",
+                              lat: lat,
+                              lon: long,
+                            );
+                            await userModel.addUser(G.loggedinUser, true);
+                            setState(() {
+                              SendingData = false;
+                            });
+
+                            Navigator.pop(context);
                           }
-                           else if(widget.isFromHome && tempImagePrivate == null)
-                           {
-                             log("no image change and from home  ");
-                             G.loggedinUser = UserDetail(
-                               ///private info
-                               privateName: _nameController.text,
-                               phoneNumber: G.userPhoneNumber,
-                               gender: genderValue,
-                               privateProfilePicUrl: widget.isFromHome
-                                   ? userModel.LoggedUser!.privateProfilePicUrl
-                                   : "",
-                               dateofbirth: UserDob,
-
-                               ///public info
-                               publicProfilePicUrl: widget.isFromHome
-                                   ? userModel.LoggedUser!.publicProfilePicUrl
-                                   : "",
-                               publicGender: widget.isFromHome
-                                   ? userModel.LoggedUser!.publicProfilePicUrl
-                                   : "",
-                               publicName: widget.isFromHome
-                                   ? userModel.LoggedUser!.publicName
-                                   : "",
-
-                               ///common
-                               noCodeNumber: widget.isFromHome
-                                   ? userModel.LoggedUser!.noCodeNumber
-                                   : "",
-                               role: "user",
-                               lat: lat,
-                               lon: long,
-                             );
-                             await userModel.addUser(G.loggedinUser, true);
-                             setState(() {
-                               SendingData = false;
-                             });
-
-                               Navigator.pop(context);
-
-                           }
-
-
-
                         },
                         child: Row(
                           children: [
@@ -947,7 +979,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 18),
                                 decoration: ShapeDecoration(
-                                  color: Color(0xFFFF6701),
+                                  color: backendColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -982,4 +1014,16 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
       ),
     );
   }
+  DateTime _parseDate(String date) {
+  try {
+    return DateTime.parse(date);
+  } catch (e) {
+    return _defaultDate(); // Return default date if parsing fails
+  }
+}
+
+/// ✅ Default date (April 18, 1994)
+DateTime _defaultDate() {
+  return DateTime(1994, 4, 18);
+}
 }

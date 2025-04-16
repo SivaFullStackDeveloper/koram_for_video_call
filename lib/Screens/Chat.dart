@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:koram_app/Helper/color.dart';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -125,10 +125,8 @@ class _ChatScreenState extends State<ChatScreen>
   OnMessageReceivedFunction() {
     log("the on message received function called");
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       // chatSocketProvider.storeAllMessageToRuntime();
     });
-
   }
 
   @override
@@ -260,7 +258,7 @@ class _ChatScreenState extends State<ChatScreen>
   addMessagesToScreen(List<UserDetail> users) async {
     List<PrivateMessage> allSavedMessage =
         await DBProvider.db.getAllPrivateMessages();
-    allPvtMessage=allSavedMessage;
+    allPvtMessage = allSavedMessage;
     for (UserDetail u in users) {
       int index = allSavedMessage.lastIndexWhere(
           (m) => m.sentBy == u.phoneNumber || m.sentTo == u.phoneNumber);
@@ -281,20 +279,17 @@ class _ChatScreenState extends State<ChatScreen>
     counter++;
     UsersProviderClass UserClass =
         Provider.of<UsersProviderClass>(context, listen: true);
-     if(counter==1)
-     {
-       addMessagesToScreen(UserClass.finalFriendsList);
-
-     }else
-     {
-       log("add message was not called");
-     }
+    if (counter == 1) {
+      addMessagesToScreen(UserClass.finalFriendsList);
+    } else {
+      log("add message was not called");
+    }
 
     if (UserClass.LoggedUser != null) {
       log("the loggeduser DEtail ${json.encode(UserClass.LoggedUser!.privateProfilePicUrl ?? "no pic")}");
     }
     ChatSocket chatSocketProvider =
-    Provider.of<ChatSocket>(context, listen: true);
+        Provider.of<ChatSocket>(context, listen: true);
     chatSocketProvider.Socket.on("message-receive", (data) async {
       log("inside message receivedd");
 
@@ -304,41 +299,34 @@ class _ChatScreenState extends State<ChatScreen>
           !theNewlyReceivedMessage.contains(receivedMessage.messageId)) {
         log("the newly received message");
         final index = FinalFriendList.indexWhere(
-                (e) => e.phoneNumber == receivedMessage.sentBy);
+            (e) => e.phoneNumber == receivedMessage.sentBy);
         log("the indexx of the filtered ${index}");
         if (index != -1) {
           log("index non zero");
-          allPvtMessage=await DBProvider.db.getAllPrivateMessages();
+          allPvtMessage = await DBProvider.db.getAllPrivateMessages();
           log("allprivate message ${allPvtMessage.length}");
-                   allPvtMessage.forEach((e){
-                     log("inside the app private message");
-                     if(e.sentBy == receivedMessage.sentBy &&
-                         !receivedMessage.isSeen)
-                     {
-                       log("the value is true ${e.sentBy == receivedMessage.sentBy}  the next ${receivedMessage.isSeen}");
-                     }else
-                     {
-                       log("the value is false ${e.sentBy == receivedMessage.sentBy}  the next ${receivedMessage.isSeen}");
-
-                     }
-                     ;
-                   });
-          List<PrivateMessage> filteredMessage = allPvtMessage
-              .where((e) =>
-
-              e.sentBy == receivedMessage.sentBy)
-              .toList();
-          
-          log("the length of filtered list ${filteredMessage.where((k)=>k.isSeen==false).length}");
-          FinalFriendList[index].newMessage = filteredMessage.where((k)=>k.isSeen==false).length;
-          FinalFriendList[index].recieveTime=  DateTime.parse(filteredMessage.last.time);
-          FinalFriendList[index].latestMessage=filteredMessage.last.message;
-          log("after updating the friends list ${FinalFriendList[index].newMessage}");
-          setState(() {
-
+          allPvtMessage.forEach((e) {
+            log("inside the app private message");
+            if (e.sentBy == receivedMessage.sentBy && !receivedMessage.isSeen) {
+              log("the value is true ${e.sentBy == receivedMessage.sentBy}  the next ${receivedMessage.isSeen}");
+            } else {
+              log("the value is false ${e.sentBy == receivedMessage.sentBy}  the next ${receivedMessage.isSeen}");
+            }
+            ;
           });
-        }
+          List<PrivateMessage> filteredMessage = allPvtMessage
+              .where((e) => e.sentBy == receivedMessage.sentBy)
+              .toList();
 
+          log("the length of filtered list ${filteredMessage.where((k) => k.isSeen == false).length}");
+          FinalFriendList[index].newMessage =
+              filteredMessage.where((k) => k.isSeen == false).length;
+          FinalFriendList[index].recieveTime =
+              DateTime.parse(filteredMessage.last.time);
+          FinalFriendList[index].latestMessage = filteredMessage.last.message;
+          log("after updating the friends list ${FinalFriendList[index].newMessage}");
+          setState(() {});
+        }
       }
 
       // if (receivedMessage.sentTo == G.userPhoneNumber &&
@@ -420,7 +408,7 @@ class _ChatScreenState extends State<ChatScreen>
                                     },
                                     leading: Icon(
                                       Icons.image_rounded,
-                                      color: Colors.orange,
+                                      color: backendColor,
                                     ),
                                     title: Text("Gallery"),
                                   )
@@ -431,16 +419,34 @@ class _ChatScreenState extends State<ChatScreen>
                 },
                 elevation: 0.0,
                 child: Container(
-                  width: 59,
-                  height: 59,
-                  decoration: ShapeDecoration(
-                    color: Color(0xFFFFEADC),
-                    shape: OvalBorder(),
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        width: 2, color: backendColor.withOpacity(0.5)),
+                    borderRadius: BorderRadius.circular(100),
+                    color: backendColor,
                   ),
                   child: Center(
-                      child: SvgPicture.asset("assets/AddstoryLogo.svg")),
-                ),
-              )
+                    child: Icon(
+                      Icons.add,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                ))
+
+            //    Container(
+            //     width: 59,
+            //     height: 59,
+            //     decoration: ShapeDecoration(
+            //       color: Color(0xFFFFEADC),
+            //       shape: OvalBorder(),
+            //     ),
+            //     child: Center(
+            //         child: SvgPicture.asset("assets/AddstoryLogo.svg")),
+            //   ),
+            // )
             : FinalFriendList.length > 0
                 ? FloatingActionButton(
                     onPressed: () {
@@ -457,11 +463,14 @@ class _ChatScreenState extends State<ChatScreen>
                       width: 59,
                       height: 59,
                       decoration: ShapeDecoration(
-                        color: Color(0xFFFFEADC),
+                        color: backendColor,
                         shape: OvalBorder(),
                       ),
                       child: Center(
-                          child: SvgPicture.asset("assets/AddContact.svg")),
+                          child: SvgPicture.asset(
+                        "assets/AddContact.svg",
+                        color: Colors.white,
+                      )),
                     ),
                   )
                 : null,
@@ -550,8 +559,8 @@ class _ChatScreenState extends State<ChatScreen>
                 ),
                 bottom: TabBar(
                     controller: _tabController,
-                    indicatorColor: Color(0xFFFF6701),
-                    labelColor: Color(0xFFFF6701),
+                    indicatorColor: backendColor,
+                    labelColor: backendColor,
                     unselectedLabelColor: Color(0xFF303030),
                     unselectedLabelStyle: TextStyle(
                       color: Color(0xFF303030),
@@ -732,8 +741,9 @@ class _ChatScreenState extends State<ChatScreen>
                                                         .cacheProfileDisplay(
                                                             FinalFriendList[i]
                                                                 .publicProfilePicUrl!)
-                                                    : AssetImage(
-                                                        "assets/profile.png")
+                                                    : Image(
+                                                        image: AssetImage(
+                                                            "assets/profile.png"))
 
                                                 // Center(
                                                 //   child: Container(
@@ -795,7 +805,8 @@ class _ChatScreenState extends State<ChatScreen>
                                                 SizedBox(
                                                   child: Text(
                                                     FinalFriendList[i]
-                                                        .publicName!,
+                                                            .publicName ??
+                                                        "",
                                                     style: TextStyle(
                                                         color:
                                                             Color(0xFF303030),
@@ -956,7 +967,9 @@ class _ChatScreenState extends State<ChatScreen>
                                         ),
                                         child: Center(
                                           child: SvgPicture.asset(
-                                              "assets/noUser.svg"),
+                                            "assets/noUser.svg",
+                                            color: backendColor,
+                                          ),
                                         )),
                                     SizedBox(
                                       height: 45,
@@ -998,7 +1011,7 @@ class _ChatScreenState extends State<ChatScreen>
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 18),
                                         decoration: ShapeDecoration(
-                                          color: Color(0xFFFF6701),
+                                          color: backendColor,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12),
@@ -1128,8 +1141,7 @@ class _ChatScreenState extends State<ChatScreen>
                                                           },
                                                           leading: Icon(
                                                             Icons.image_rounded,
-                                                            color:
-                                                                Colors.orange,
+                                                            color: backendColor,
                                                           ),
                                                           title:
                                                               Text("Gallery"),
@@ -1141,8 +1153,28 @@ class _ChatScreenState extends State<ChatScreen>
                                       },
                                       child: Row(
                                         children: [
-                                          SvgPicture.asset(
-                                              "assets/AddstoryLogo.svg"),
+                                          Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 2,
+                                                  color: backendColor
+                                                      .withOpacity(0.5)),
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: backendColor,
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.add,
+                                                size: 30,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          // SvgPicture.asset(
+                                          //     "assets/AddstoryLogo.svg"),
                                           SizedBox(
                                             width: 20,
                                           ),
@@ -1219,6 +1251,8 @@ class _ChatScreenState extends State<ChatScreen>
                                                           CircularProgressIndicator(
                                                         value:
                                                             progress.progress,
+                                                        color:
+                                                            Colors.transparent,
                                                       ),
                                                     ),
                                                     imageUrl: G.HOST +

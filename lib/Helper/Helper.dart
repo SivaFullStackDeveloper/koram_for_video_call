@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:koram_app/Helper/color.dart';
 
 import 'package:koram_app/Models/User.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,8 +18,9 @@ import 'dart:io';
 import '../Models/NewUserModel.dart';
 
 class G {
-  // static const IP = "24.199.85.25";
-  static const IP = "192.168.29.215";
+  static const IP = "24.199.85.25";
+  //static const IP = "192.168.1.10";
+  
   // 192.168.29.215
   // static const HOST = "https://api.koram.in/";
   static const HOST = "http://${IP}:3000/";
@@ -35,8 +37,8 @@ class G {
   static String? publicImageName;
   static String? privateImageName;
   static List<UserDetail>? FriendsList;
-  static bool isInternet=false;
-  static bool isOnChatroom=false;
+  static bool isInternet = false;
+  static bool isOnChatroom = false;
 
   Future<dynamic> getOtp(String phoneNumber) async {
     log("in otp " + phoneNumber);
@@ -61,18 +63,20 @@ class G {
       return 500; // Replace with your generic error code
     }
   }
-  Future<bool> isInternetAvailable() async {
 
-    final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
+  Future<bool> isInternetAvailable() async {
+    final List<ConnectivityResult> connectivityResult =
+        await (Connectivity().checkConnectivity());
     log("conect ${connectivityResult}");
     if (connectivityResult == ConnectivityResult.none) {
-      isInternet=false;
+      isInternet = false;
       return false; // No internet connection
     } else {
-      isInternet=true;
+      isInternet = true;
       return true; // Internet connection is available
     }
   }
+
   static Future<dynamic> verifyOtp(String phone, String otp) async {
     final url = HOST + "api/v1/otp/verify";
     var verified = false;
@@ -124,12 +128,14 @@ class G {
 
     prefs.setString("LoggedInUserData", u.toJson().toString());
   }
+
   int validateAge(DateTime dob) {
     final today = DateTime.now();
     final age = today.year - dob.year;
 
     // Check if birthday has occurred this year
-    final isBirthdayPassed = (today.month > dob.month) || (today.month == dob.month && today.day >= dob.day);
+    final isBirthdayPassed = (today.month > dob.month) ||
+        (today.month == dob.month && today.day >= dob.day);
     final adjustedAge = isBirthdayPassed ? age : age - 1;
 
     if (adjustedAge < 18) {
@@ -359,44 +365,54 @@ class G {
       // throw Exception('Failed to load users');
     }
   }
-  Future<List<UserDetail>> getUserByPhonenumber(List<String> phoneNumbers) async {
+
+  Future<List<UserDetail>> getUserByPhonenumber(
+      List<String> phoneNumbers) async {
     final url = G.HOST + "api/v1/getUsersByNumber";
-    var body=json.encode({"phoneNumbers": phoneNumbers});
-try{
-  http.Response response = await http.post(Uri.parse(url),body: body,headers: {
-    "Content-Type": "application/json",
-  },);
-  log("the reponse ${response.body}");
+    var body = json.encode({"phoneNumbers": phoneNumbers});
+    try {
+      http.Response response = await http.post(
+        Uri.parse(url),
+        body: body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+      log("the reponse ${response.body}");
 
-  if (response.statusCode == 200) {
-
-    final List<dynamic> jsonList = json.decode(response.body);
-    final List<UserDetail> userList =
-    jsonList.map((json) => UserDetail.fromJson(json)).toList();
-    log("the received list ${userList.length}");
-    return userList;
-  } else {
-    // Handle error
-    return [];
-    // throw Exception('Failed to load users');
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = json.decode(response.body);
+        final List<UserDetail> userList =
+            jsonList.map((json) => UserDetail.fromJson(json)).toList();
+        log("the received list ${userList.length}");
+        return userList;
+      } else {
+        // Handle error
+        return [];
+        // throw Exception('Failed to load users');
+      }
+    } catch (e) {
+      log("error in getUSer ${e}");
+      return [];
+    }
   }
-}catch(e)
-{
-  log("error in getUSer ${e}");
-  return [];
-}
 
-  }
-  Future<List<UserDetail>> getNearBy(double lat,double lon,String maxDistance,String Gender) async {
+  Future<List<UserDetail>> getNearBy(
+      double lat, double lon, String maxDistance, String Gender) async {
     log("getNear By user called ${lat} $lon $maxDistance $Gender ${G.userPhoneNumber}");
     final url = G.HOST + "api/v1/nearBy";
 
-    http.Response response =
-    await http.post(Uri.parse(url), body: {"lat": lat.toString(),"lon":lon.toString(),"maxDistance":maxDistance.toString(),"gender":Gender,"phoneNumber":G.userPhoneNumber});
+    http.Response response = await http.post(Uri.parse(url), body: {
+      "lat": lat.toString(),
+      "lon": lon.toString(),
+      "maxDistance": maxDistance.toString(),
+      "gender": Gender,
+      "phoneNumber": G.userPhoneNumber
+    });
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = json.decode(response.body);
       final List<UserDetail> userList =
-      jsonList.map((json) => UserDetail.fromJson(json)).toList();
+          jsonList.map((json) => UserDetail.fromJson(json)).toList();
       return userList;
     } else {
       // Handle error
@@ -404,6 +420,7 @@ try{
       // throw Exception('Failed to load users');
     }
   }
+
   Future<String> downloadImage(String imageUrl, String imageName) async {
     final response = await http.get(Uri.parse(imageUrl));
     if (response.statusCode == 200) {
@@ -416,7 +433,7 @@ try{
     }
   }
 
-  Future<File?> cropImage(XFile pickedFile,BuildContext context) async {
+  Future<File?> cropImage(XFile pickedFile, BuildContext context) async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: pickedFile.path,
       compressFormat: ImageCompressFormat.jpg,
@@ -424,7 +441,7 @@ try{
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Cropper',
-          toolbarColor: Colors.deepOrange,
+          toolbarColor: backendColor,
           toolbarWidgetColor: Colors.white,
           initAspectRatio: CropAspectRatioPreset.square,
           lockAspectRatio: false,
@@ -456,14 +473,12 @@ try{
     );
 
     if (croppedFile != null) {
-
       return File(croppedFile.path);
-
     }
     return null;
   }
-
 }
+
 class CropAspectRatioPresetCustom implements CropAspectRatioPresetData {
   @override
   (int, int)? get data => (2, 3);
