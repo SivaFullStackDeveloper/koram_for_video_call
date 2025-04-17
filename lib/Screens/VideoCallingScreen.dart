@@ -41,7 +41,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
   var temp;
   bool video = true;
 
-  bool speaker = true;
+  bool speaker = false;
   late MediaStream _localStream;
 
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();

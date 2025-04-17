@@ -54,7 +54,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
   init() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      callHistory = prefs.getStringList("call_history") ?? [];
+      callHistory = prefs.getStringList("call_history") ;
       callHistory = callHistory.reversed.toList();
       log("CALL HIstory ${callHistory}");
     });
@@ -89,6 +89,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
         var decoded = json.decode(e);
         List<UserDetail> theUSer =
             allUser.where((e) => e.phoneNumber == decoded["caller"]).toList();
+        log("the user ${theUSer}");
         if (theUSer.isNotEmpty) {
           decoded["callerName"] = theUSer[0].publicName;
           decoded["profilePic"] = theUSer[0].publicProfilePicUrl;
@@ -104,7 +105,6 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
     } else {
       log("all users were empty");
     }
-
 
     loggedUserData =
         UserDetail.fromJson(jsonDecode(prefs.getString("LoggedInUserData")!));
@@ -264,10 +264,10 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                             log("the text valuee ${v}");
                             isSelected = isSelected.map((e) => false).toList();
 
-                              setState(() {
-                                callHistory =
-                                    prefs.getStringList("call_history") ?? [];
-                              });
+                            setState(() {
+                              callHistory =
+                                  prefs.getStringList("call_history") ?? [];
+                            });
 
                             log("call history length ${callHistory.length}");
                             callHistory = callHistory.where((e) {
@@ -453,48 +453,48 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                         selected: isSelected[i],
                         selectedTileColor:
                             RuntimeStorage().PrimaryOrange.withOpacity(0.2),
-                        leading:
-                            g["profilePic"] != null && g["profilePic"] != ""
-                                ? Stack(children: [
-                                    CircleAvatar(
-                                      backgroundImage:
-                                          AssetImage("assets/profile.png"),
-                                      foregroundImage: g["profilePic"] != null
-                                          ? CachedNetworkImageProvider(
-                                              G.HOST +
-                                                  "api/v1/images/" +
-                                                  g["profilePic"],
-                                            )
-                                          : AssetImage("assets/profile.png")
-                                              as ImageProvider,
-                                    ),
-                                    isSelected[i]
-                                        ? Positioned(
-                                            right: 0,
-                                            bottom: 0,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors
-                                                    .white, // White border background
-                                              ),
-                                              padding: EdgeInsets.all(
-                                                  0), // Space for the border
-                                              child: Icon(
-                                                Icons.check_circle_rounded,
-                                                size: 20,
-                                                color: RuntimeStorage()
-                                                    .PrimaryOrange, // Icon color
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                  ])
-                                : CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    backgroundImage:
-                                        AssetImage("assets/profile.png"),
-                                  ),
+                        leading: g["profilePic"] != null &&
+                                g["profilePic"] != ""
+                            ? Stack(children: [
+                                CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage("assets/profile.png"),
+                                  foregroundImage: g["profilePic"] != null
+                                      ? CachedNetworkImageProvider(
+                                          G.HOST +
+                                              "api/v1/images/" +
+                                              g["profilePic"],
+                                        )
+                                      : AssetImage("assets/profile.png")
+                                          as ImageProvider,
+                                ),
+                                isSelected[i]
+                                    ? Positioned(
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors
+                                                .white, // White border background
+                                          ),
+                                          padding: EdgeInsets.all(
+                                              0), // Space for the border
+                                          child: Icon(
+                                            Icons.check_circle_rounded,
+                                            size: 20,
+                                            color: RuntimeStorage()
+                                                .PrimaryOrange, // Icon color
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                              ])
+                            : CircleAvatar(
+                                backgroundColor: Colors.white,
+                                backgroundImage:
+                                    AssetImage("assets/profile.png"),
+                              ),
                         title: Text(
                           g["callerName"] ?? "",
                           style: TextStyle(

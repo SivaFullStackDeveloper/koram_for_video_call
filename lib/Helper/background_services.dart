@@ -45,7 +45,7 @@ class BackgroundService {
       }
 
       final response =
-          await http.get(Uri.parse('http://24.199.85.25:3323/get-color'));
+          await http.get(Uri.parse('http://24.199.85.25:3300/get-color'));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

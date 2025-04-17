@@ -646,31 +646,30 @@ class _ChatScreenState extends State<ChatScreen>
                                 radius: 60,
                                 backgroundColor: Colors.grey[300],
                               ),
-                      )
+                      )),
+                  // Container(
+                  //   width: 120,
+                  //   decoration: ShapeDecoration(
+                  //     image: G.loggedinUser.privateProfilePicUrl != ""
+                  //         ? DecorationImage(
+                  //
+                  //             image: CachedNetworkImageProvider(
+                  //               G.HOST +
+                  //                   "api/v1/images/" +
+                  //                   G.loggedinUser.privateProfilePicUrl!,
+                  //             ),
+                  //             fit: BoxFit.contain,
+                  //           )
+                  //         : DecorationImage(
+                  //             image: AssetImage("assets/profile.png"),
+                  //             fit: BoxFit.contain,
+                  //           ),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(100),
+                  //     ),
+                  //   ),
+                  // ),
 
-                      // Container(
-                      //   width: 120,
-                      //   decoration: ShapeDecoration(
-                      //     image: G.loggedinUser.privateProfilePicUrl != ""
-                      //         ? DecorationImage(
-                      //
-                      //             image: CachedNetworkImageProvider(
-                      //               G.HOST +
-                      //                   "api/v1/images/" +
-                      //                   G.loggedinUser.privateProfilePicUrl!,
-                      //             ),
-                      //             fit: BoxFit.contain,
-                      //           )
-                      //         : DecorationImage(
-                      //             image: AssetImage("assets/profile.png"),
-                      //             fit: BoxFit.contain,
-                      //           ),
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(100),
-                      //     ),
-                      //   ),
-                      // ),
-                      ),
                   SizedBox(
                     width: 19,
                   ),
@@ -731,63 +730,41 @@ class _ChatScreenState extends State<ChatScreen>
                                                     child: SvgPicture.asset(
                                                         "assets/StoryNotseen.svg"))
                                                 : SizedBox(),
+                                            // Padding(
+                                            //     padding: const EdgeInsets.only(
+                                            //         left: 4.0),
+                                            //     child: FinalFriendList[i]
+                                            //                 .publicProfilePicUrl !=
+                                            //             null
+                                            //         ? CommanWidgets()
+                                            //             .cacheProfileDisplay(
+                                            //                 FinalFriendList[i]
+                                            //                     .publicProfilePicUrl!)
+                                            //         : Image(
+                                            //             image: AssetImage(
+                                            //                 "assets/profile.png"))
+                                            //     ), 
                                             Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 4.0),
-                                                child: FinalFriendList[i]
-                                                            .publicProfilePicUrl !=
-                                                        null
-                                                    ? CommanWidgets()
-                                                        .cacheProfileDisplay(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: CircleAvatar(
+                                                backgroundImage:
+                                                    AssetImage(
+                                                        "assets/profile.png"),
+                                                foregroundImage:
+                                                    CachedNetworkImageProvider(
+                                                        G.HOST +
+                                                            "api/v1/images/" +
                                                             FinalFriendList[i]
-                                                                .publicProfilePicUrl!)
-                                                    : Image(
-                                                        image: AssetImage(
-                                                            "assets/profile.png"))
+                                                                .publicProfilePicUrl!),
+                                                // onForegroundImageError: (){}AssetImage("assets/profile.png"),
+                                                radius: 30,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                              ),
+                                            )
 
-                                                // Center(
-                                                //   child: Container(
-                                                //     width: 48,
-                                                //     height: 48,
-                                                //     decoration:
-                                                //         ShapeDecoration(
-                                                //       image: FinalFriendList[
-                                                //                       i]
-                                                //                   .publicProfilePicUrl !=
-                                                //               ""
-                                                //           ? DecorationImage(
-                                                //               image:
-                                                //                   CachedNetworkImageProvider(
-                                                //                 G.HOST +
-                                                //                     "api/v1/images/" +
-                                                //                     FinalFriendList[i].publicProfilePicUrl!,
-                                                //               ),
-                                                //
-                                                //               // NetworkImage(G
-                                                //               //         .HOST +
-                                                //               //     "api/v1/images/" +
-                                                //               //     FinalFriendList[i]
-                                                //               //         .publicProfilePicUrl!),
-                                                //               fit: BoxFit
-                                                //                   .fill,
-                                                //             )
-                                                //           : DecorationImage(
-                                                //               image: AssetImage(
-                                                //                   "assets/profile.png"),
-                                                //               fit: BoxFit
-                                                //                   .fill,
-                                                //             ),
-                                                //       shape:
-                                                //           RoundedRectangleBorder(
-                                                //         borderRadius:
-                                                //             BorderRadius
-                                                //                 .circular(
-                                                //                     100),
-                                                //       ),
-                                                //     ),
-                                                //   ),
-                                                // ),
-                                                ),
+
                                           ]),
                                           SizedBox(
                                             width: 8,
@@ -1261,40 +1238,8 @@ class _ChatScreenState extends State<ChatScreen>
                                                             .publicProfilePicUrl!,
                                                   ),
                                                 ),
-
-                                                // Container(
-                                                //   width: 50,
-                                                //   height: 50,
-                                                //   decoration: ShapeDecoration(
-                                                //     image: G.loggedinUser
-                                                //                 .privateProfilePicUrl !=
-                                                //             ""
-                                                //         ? DecorationImage(
-                                                //             image: CachedNetworkImageProvider(
-                                                //
-                                                //               G.HOST + "api/v1/images/" + G.loggedinUser.publicProfilePicUrl!,
-                                                //
-                                                //             ),
-                                                //             // NetworkImage(G
-                                                //             //         .HOST +
-                                                //             //     "api/v1/images/" +
-                                                //             //     G.loggedinUser
-                                                //             //         .privateProfilePicUrl!),
-                                                //             fit: BoxFit.fill,
-                                                //           )
-                                                //         : DecorationImage(
-                                                //             image: AssetImage(
-                                                //                 "assets/profile.png"),
-                                                //             fit: BoxFit.fill),
-                                                //     shape: RoundedRectangleBorder(
-                                                //       borderRadius:
-                                                //           BorderRadius.circular(
-                                                //               100),
-                                                //     ),
-                                                //   ),
-                                                // ),
                                               ),
-                                            )
+                                            ),
                                           ]),
                                         ),
                                         SizedBox(

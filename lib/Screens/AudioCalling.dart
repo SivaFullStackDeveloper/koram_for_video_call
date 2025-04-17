@@ -120,7 +120,8 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
           "caller": widget.caller,
           "callTo": widget.callTo,
           "time": DateTime.now().toString(),
-          "callerName": G.loggedinUser.publicName
+          "callerName": widget.otherPersonData?.publicName ?? "",
+          "profilePic": widget.otherPersonData?.publicProfilePicUrl ?? "" 
         }));
         log("the call history length ${callHistory.length}");
         prefs.setStringList("call_history", callHistory);
@@ -924,9 +925,17 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                                   ),
                                 ),
                                 child: Center(
-                                    child: SvgPicture.asset(
-                                        "assets/switchCam.svg"))),
-                          ),
+                                  child:CircleAvatar(
+                                  child: Icon(
+                                    video ? Icons.videocam : Icons.videocam_off,
+                                    color: Colors.white,
+                                  ),
+                                ),),),),
+                                
+                          //       Center(
+                          //           child: SvgPicture.asset(
+                          //               "assets/switchCam.svg"))),
+                          // ),
                           Expanded(child: SizedBox()),
                           GestureDetector(
                             onTap: () {
