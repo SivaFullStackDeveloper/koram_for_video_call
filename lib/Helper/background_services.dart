@@ -8,6 +8,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class BackgroundService {
   static const String isolateName = "color_fetch_isolate";
@@ -104,5 +105,33 @@ class BackgroundService {
       return backendColor;
     }
     return backendColor; // Default color if no color is found
+  }
+}
+
+
+
+class Audio {
+  AudioPlayer? _audioPlayer;
+
+  Audio() {
+    _audioPlayer = AudioPlayer();
+  }
+
+  void playRingingSound() async {
+    if (_audioPlayer == null) {
+      _audioPlayer = AudioPlayer();
+    }
+
+    // await _audioPlayer!.setReleaseMode(ReleaseMode.loop);
+    // await _audioPlayer!.play(AssetSource('audio/ringing.wav'));
+  }
+
+  void stopAudio() async {
+    if (_audioPlayer != null) {
+      await _audioPlayer!.stop();
+      await _audioPlayer!.release();
+      await _audioPlayer!.dispose();
+      _audioPlayer = null;
+    }
   }
 }

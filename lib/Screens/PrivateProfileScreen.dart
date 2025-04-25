@@ -550,8 +550,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 7, 20, 16),
-                    child: 
-DateTimeField(
+                    child: DateTimeField(
   style: TextStyle(
     color: Color(0xFF303030),
     fontSize: 14,

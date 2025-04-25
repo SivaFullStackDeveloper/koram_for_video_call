@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,6 +15,7 @@ import 'package:koram_app/Helper/CallSocketServices.dart';
 import 'package:koram_app/Helper/ConnectivityProviderService.dart';
 import 'package:koram_app/Helper/DBHelper.dart';
 import 'package:koram_app/Helper/Helper.dart';
+import 'package:koram_app/Helper/background_services.dart';
 import 'package:koram_app/Helper/color.dart';
 import 'package:koram_app/Models/ChatRoom.dart';
 import 'package:koram_app/Models/NewUserModel.dart';
@@ -74,7 +75,7 @@ class _ChattingScreenState extends State<ChattingScreen>
   int countDependency = 0;
   bool _isProcessingCAll = false;
   int countofSocket = 0;
-
+  final AudioPlayer _audioPlayer = AudioPlayer();
   startFunctions(String num) async {
     // PvtMessage = ChatSocket().getMessageByPhoneRuntime(num);
     // PvtMessage = await DBProvider.db
@@ -602,6 +603,7 @@ class _ChattingScreenState extends State<ChattingScreen>
 
   @override
   void dispose() {
+    _audioPlayer.dispose();
     // TODO: implement dispose
     _msgInput.dispose();
     _scrollController.dispose();
@@ -679,192 +681,198 @@ class _ChattingScreenState extends State<ChattingScreen>
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar:PreferredSize(
-    preferredSize: Size.fromHeight(60.0),
-    child: GestureDetector(
-      onTap: () {
-        print("AppBar tapped!");
-        setState(() {
-          displayOptions = false;
-        });
-      },
-      child:  AppBar(
-        elevation: 0.5,
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        title: Container(
-            height: 70,
-            // color: Colors.black,
-            width: 170,
-            padding: EdgeInsets.only(left: 0),
-            child: Row(
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: SvgPicture.asset("assets/arrowLeft.svg")),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: CommanWidgets().cacheProfileDisplay(
-                          widget.otherUserDetail!.publicProfilePicUrl!??"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
-                    )
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: GestureDetector(
+            onTap: () {
+              print("AppBar tapped!");
+              setState(() {
+                displayOptions = false;
+              });
+            },
+            child: AppBar(
+              elevation: 0.5,
+              backgroundColor: Colors.white,
+              automaticallyImplyLeading: false,
+              title: Container(
+                  height: 70,
+                  // color: Colors.black,
+                  width: 170,
+                  padding: EdgeInsets.only(left: 0),
+                  child: Row(
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: SvgPicture.asset("assets/arrowLeft.svg")),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: CommanWidgets().cacheProfileDisplay(widget
+                                    .otherUserDetail!.publicProfilePicUrl! ??
+                                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
+                          )
 
-                    // CachedNetworkImage(imageUrl: G.HOST +
-                    //     "api/v1/images/" +
-                    //     widget.groupName!.publicProfilePicUrl!,filterQuality: FilterQuality.low,),
-                    // CircleAvatar(
-                    //     backgroundImage: CachedNetworkImageProvider(G.HOST +
-                    //         "api/v1/images/" +
-                    //         widget.groupName!.publicProfilePicUrl!,scale: 2)),
-                  ],
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10),
-                    height: 70,
-                    // width: 100,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.otherUserDetail!.privateName!,
-                          style: TextStyle(
-                            color: Color(0xFF303030),
-                            fontSize: 16,
-                            fontFamily: 'Helvetica',
-                            fontWeight: FontWeight.w500,
-                            height: 1.50,
+                          // CachedNetworkImage(imageUrl: G.HOST +
+                          //     "api/v1/images/" +
+                          //     widget.groupName!.publicProfilePicUrl!,filterQuality: FilterQuality.low,),
+                          // CircleAvatar(
+                          //     backgroundImage: CachedNetworkImageProvider(G.HOST +
+                          //         "api/v1/images/" +
+                          //         widget.groupName!.publicProfilePicUrl!,scale: 2)),
+                        ],
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          height: 70,
+                          // width: 100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.otherUserDetail!.privateName!,
+                                style: TextStyle(
+                                  color: Color(0xFF303030),
+                                  fontSize: 16,
+                                  fontFamily: 'Helvetica',
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.50,
+                                ),
+                              ),
+                              // Text(
+                              //   "100 members",
+                              //   style: TextStyle(
+                              //       fontSize: 15,
+                              //       fontWeight: FontWeight.normal,
+                              //       color: Colors.grey),
+                              // ),
+                            ],
                           ),
                         ),
-                        // Text(
-                        //   "100 members",
-                        //   style: TextStyle(
-                        //       fontSize: 15,
-                        //       fontWeight: FontWeight.normal,
-                        //       color: Colors.grey),
-                        // ),
-                      ],
-                    ),
-                  ),
-                )
+                      )
+                    ],
+                  )),
+              actions: [
+                GestureDetector(
+                    onTap: () async {
+                       Audio().playRingingSound();
+                  
+                      setState(() {
+                        displayOptions = false;
+                      });
+                      try {
+                        log("inside try of the phone call navigation");
+                        if (_isProcessingCAll) return; // Prevent multiple taps
+                        setState(() {
+                          _isProcessingCAll = true;
+                        });
+                        if (await _requestPermissions()) {
+                          await callSocket.CallRequest(
+                              widget.otherUserDetail!.phoneNumber!,
+                              G.userPhoneNumber ?? "",
+                              "Audio");
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => AudioCallingScreen(
+                                    isVideoCall: false,
+                                    isfromNotification: false,
+                                    isIncoming: false,
+                                    caller: G.userPhoneNumber,
+                                    callTo:
+                                        widget.otherUserDetail!.phoneNumber!,
+                                    otherPersonData: widget.otherUserDetail,
+                                  )));
+                        } else {
+                          log("permission was not granted ");
+                        }
+                      } catch (e) {
+                        log("error while auduio call  clicked $e");
+                      } finally {
+                        log("inside finnlay ");
+                        setState(() {
+                          _isProcessingCAll = false;
+                        });
+                      }
+                    },
+                    child: SvgPicture.asset("assets/fluent_call.svg")),
+                SizedBox(
+                  width: 10,
+                ),
+                GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        displayOptions = false;
+                      });
+                      try {
+                        log("inside try of the phone call navigation");
+                        if (_isProcessingCAll) return; // Prevent multiple taps
+                        setState(() {
+                          _isProcessingCAll = true;
+                        });
+                        if (await _requestPermissions()) {
+                          await callSocket.CallRequest(
+                              widget.otherUserDetail!.phoneNumber!,
+                              G.userPhoneNumber ?? "",
+                              "Video");
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => AudioCallingScreen(
+                                    isVideoCall: true,
+                                    isfromNotification: false,
+                                    isIncoming: false,
+                                    caller: G.userPhoneNumber,
+                                    callTo:
+                                        widget.otherUserDetail!.phoneNumber!,
+                                    otherPersonData: widget.otherUserDetail,
+                                  )));
+                        } else {
+                          log("permission was not granted ");
+                        }
+                      } catch (e) {
+                        log("error while auduio call  clicked $e");
+                      } finally {
+                        log("inside finnlay ");
+                        setState(() {
+                          _isProcessingCAll = false;
+                        });
+                      }
+                    },
+                    child: SvgPicture.asset("assets/fluent_video.svg")),
+                SizedBox(
+                  width: 10,
+                ),
+                GestureDetector(
+                    onTap: () {
+                      toggleOptions();
+                    },
+                    child: SvgPicture.asset("assets/threeDot.svg")),
+                SizedBox(
+                  width: 20,
+                ),
+                // Icon(
+                //   Icons.search,
+                //   color: Colors.grey,
+                //   size: 25,
+                // ),
+                // SizedBox(
+                //   width: 10,
+                // ),
+                // Container(
+                //     height: 25,
+                //     width: 25,
+                //     child: Image.asset("assets/Group 629.png")),
+                // SizedBox(
+                //   width: 10,
+                // ),
               ],
-            )),
-        actions: [
-          GestureDetector(
-              onTap: () async {
-                 setState(() {
-                              displayOptions = false;
-                            });
-                try {
-                  log("inside try of the phone call navigation");
-                  if (_isProcessingCAll) return; // Prevent multiple taps
-                  setState(() {
-                    _isProcessingCAll = true;
-                  });
-                  if (await _requestPermissions()) {
-                    await callSocket.CallRequest(
-                        widget.otherUserDetail!.phoneNumber!,
-                        G.userPhoneNumber ?? "",
-                        "Audio");
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (ctx) => AudioCallingScreen(
-                              isVideoCall: false,
-                              isfromNotification: false,
-                              isIncoming: false,
-                              caller: G.userPhoneNumber,
-                              callTo: widget.otherUserDetail!.phoneNumber!,
-                              otherPersonData: widget.otherUserDetail,
-                            )));
-                  } else {
-                    log("permission was not granted ");
-                  }
-                } catch (e) {
-                  log("error while auduio call  clicked $e");
-                } finally {
-                  log("inside finnlay ");
-                  setState(() {
-                    _isProcessingCAll = false;
-                  });
-                }
-              },
-              child: SvgPicture.asset("assets/fluent_call.svg")),
-          SizedBox(
-            width: 10,
-          ),
-          GestureDetector(
-              onTap: () async {
-                setState(() {
-                              displayOptions = false;
-                            });
-                try {
-                  log("inside try of the phone call navigation");
-                  if (_isProcessingCAll) return; // Prevent multiple taps
-                  setState(() {
-                    _isProcessingCAll = true;
-                  });
-                  if (await _requestPermissions()) {
-                    await callSocket.CallRequest(
-                        widget.otherUserDetail!.phoneNumber!,
-                        G.userPhoneNumber ?? "",
-                        "Video");
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (ctx) => AudioCallingScreen(
-                              isVideoCall: true,
-                              isfromNotification: false,
-                              isIncoming: false,
-                              caller: G.userPhoneNumber,
-                              callTo: widget.otherUserDetail!.phoneNumber!,
-                              otherPersonData: widget.otherUserDetail,
-                            )));
-                  } else {
-                    log("permission was not granted ");
-                  }
-                } catch (e) {
-                  log("error while auduio call  clicked $e");
-                } finally {
-                  log("inside finnlay ");
-                  setState(() {
-                    _isProcessingCAll = false;
-                  });
-                }
-              },
-              child: SvgPicture.asset("assets/fluent_video.svg")),
-          SizedBox(
-            width: 10,
-          ),
-          GestureDetector(
-              onTap: () {
-                toggleOptions();
-              },
-              child: SvgPicture.asset("assets/threeDot.svg")),
-          SizedBox(
-            width: 20,
-          ),
-          // Icon(
-          //   Icons.search,
-          //   color: Colors.grey,
-          //   size: 25,
-          // ),
-          // SizedBox(
-          //   width: 10,
-          // ),
-          // Container(
-          //     height: 25,
-          //     width: 25,
-          //     child: Image.asset("assets/Group 629.png")),
-          // SizedBox(
-          //   width: 10,
-          // ),
-        ],
-      ),)),
+            ),
+          )),
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Stack(
@@ -872,10 +880,9 @@ class _ChattingScreenState extends State<ChattingScreen>
             Positioned.fill(
               child: GestureDetector(
                 onTap: () {
-     
                   setState(() {
-                              displayOptions = false;
-                            });
+                    displayOptions = false;
+                  });
                 },
                 child: ListView.builder(
                     physics: BouncingScrollPhysics(),

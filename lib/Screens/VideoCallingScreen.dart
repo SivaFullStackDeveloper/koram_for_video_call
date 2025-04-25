@@ -515,7 +515,7 @@ class _VideoCallingScreenState extends State<VideoCallingScreen> {
                               child: CircleAvatar(
                                   child: Icon(
                                     Icons.cameraswitch,
-                                    color: Colors.white,
+                                    
                                   ),
                                   backgroundColor: Colors.grey),
                             ),

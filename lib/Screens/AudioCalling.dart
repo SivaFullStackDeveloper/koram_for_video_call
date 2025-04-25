@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:koram_app/Helper/background_services.dart';
 import 'package:koram_app/Helper/color.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class AudioCallingScreen extends StatefulWidget {
 
 class _AudioCallingScreenState extends State<AudioCallingScreen> {
   var calling = true;
+
   final _localRenderer = new RTCVideoRenderer();
   final _remoteRenderer = new RTCVideoRenderer();
   late DateTime callStartTime;
@@ -70,6 +72,8 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
   // AudioPlayer? audioPlayer;
   @override
   dispose() {
+    Audio().stopAudio();
+
     try {
       log("disposse called ");
       _localRenderer.dispose();
@@ -121,7 +125,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
           "callTo": widget.callTo,
           "time": DateTime.now().toString(),
           "callerName": widget.otherPersonData?.publicName ?? "",
-          "profilePic": widget.otherPersonData?.publicProfilePicUrl ?? "" 
+          "profilePic": widget.otherPersonData?.publicProfilePicUrl ?? ""
         }));
         log("the call history length ${callHistory.length}");
         prefs.setStringList("call_history", callHistory);
@@ -136,7 +140,8 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
             "caller": widget.caller,
             "callTo": widget.callTo,
             "time": DateTime.now().toString(),
-            "callerName": ""
+            "callerName": widget.otherPersonData?.publicName ?? "",
+            "profilePic": widget.otherPersonData?.publicProfilePicUrl ?? ""
           }));
           log("the call history length ${callHistory.length}");
           prefs.setStringList("call_history", callHistory);
@@ -343,7 +348,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
     // Optionally, stop the audio-only track to save bandwidth
     _localStream.getTracks().forEach((track) {
       if (track.kind == 'video') {
-        track.stop();
+        //track.stop();
       }
     });
 
@@ -451,6 +456,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    widget.isVideoCall == true? !speaker == true:speaker;
     CallSocketService callSocket =
         Provider.of<CallSocketService>(context, listen: true);
     if (callSocket.offerData != null) {
@@ -571,6 +577,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                                           child: Text("Accept")),
                                       TextButton(
                                           onPressed: () {
+                                            Audio().stopAudio();
                                             log("rejected the video call  ${widget.callTo}");
                                             callSocket.sendVideoRequestResponse(
                                                 "No", widget.callTo);
@@ -880,17 +887,21 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                               // });
                               // _localStream.getVideoTracks()[0].enabled =
                               //     videoControl;
-                              if (videoControl) {
-                                if (_localStream.getVideoTracks()[0].enabled) {
-                                  _localStream.getVideoTracks()[0].enabled =
-                                      false;
+                              setState(() {
+                                if (videoControl) {
+                                  if (_localStream
+                                      .getVideoTracks()[0]
+                                      .enabled) {
+                                    _localStream.getVideoTracks()[0].enabled =
+                                        false;
+                                  } else {
+                                    _localStream.getVideoTracks()[0].enabled =
+                                        true;
+                                  }
                                 } else {
-                                  _localStream.getVideoTracks()[0].enabled =
-                                      true;
+                                  sendVideoRequest(callSocket);
                                 }
-                              } else {
-                                sendVideoRequest(callSocket);
-                              }
+                              });
                             },
                             child: Container(
                               width: 63.76,
@@ -910,28 +921,31 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                                         )),
                             ),
                           ),
-                          Expanded(child: SizedBox()),
-                          GestureDetector(
-                            onTap: () {
-                              switchCamera();
-                            },
-                            child: Container(
-                                width: 63.76,
-                                height: 63.76,
-                                decoration: ShapeDecoration(
-                                  color: backendColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(62.06),
-                                  ),
-                                ),
-                                child: Center(
-                                  child:CircleAvatar(
-                                  child: Icon(
-                                    video ? Icons.videocam : Icons.videocam_off,
-                                    color: Colors.white,
-                                  ),
-                                ),),),),
-                                
+
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     switchCamera();
+                          //   },
+                          //   child: Container(
+                          //     width: 63.76,
+                          //     height: 63.76,
+                          //     decoration: ShapeDecoration(
+                          //       color: backendColor,
+                          //       shape: RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(62.06),
+                          //       ),
+                          //     ),
+                          //     child: Center(
+                          //       child: CircleAvatar(
+                          //         child: Icon(
+                          //           video ? Icons.videocam : Icons.videocam_off,
+                          //           color: Colors.white,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+
                           //       Center(
                           //           child: SvgPicture.asset(
                           //               "assets/switchCam.svg"))),
@@ -956,7 +970,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                                   ),
                                 ),
                                 child: Center(
-                                    child: speaker
+                                    child: widget.isVideoCall
                                         ? SvgPicture.asset(
                                             "assets/speakerLogo.svg")
                                         : Icon(

@@ -31,6 +31,7 @@ dependencies:
   shared_preferences: ^2.5.2
   flutter_webrtc: ^0.12.10
   flutter_svg: ^2.0.9
+  audioplayers: ^5.2.1
   socket_io_client: ^1.0.1
  # flutter_background: ^1.3.0+1
   sdp_transform: ^0.3.2
@@ -107,6 +108,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/audio/ringing.wav
   #     - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
