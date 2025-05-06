@@ -626,16 +626,15 @@ class _ChatScreenState extends State<ChatScreen>
                       child: Container(
                         width: 41,
                         child: UserClass.LoggedUser != null &&
-                                UserClass.LoggedUser!.privateProfilePicUrl !=
+                                UserClass.LoggedUser!.publicProfilePicUrl !=
                                     null
                             ? CircleAvatar(
                                 backgroundImage:
                                     AssetImage("assets/profile.png"),
                                 foregroundImage: CachedNetworkImageProvider(
-                                    G.HOST +
-                                        "api/v1/images/" +
+                                   
                                         UserClass
-                                            .LoggedUser!.privateProfilePicUrl!),
+                                            .LoggedUser!.publicProfilePicUrl!),
                                 // onForegroundImageError: (){}AssetImage("assets/profile.png"),
                                 radius: 60,
                                 backgroundColor: Colors.grey[300],
@@ -783,7 +782,7 @@ class _ChatScreenState extends State<ChatScreen>
                                                   child: Text(
                                                     FinalFriendList[i]
                                                             .publicName ??
-                                                        "",
+                                                        "No Name",
                                                     style: TextStyle(
                                                         color:
                                                             Color(0xFF303030),

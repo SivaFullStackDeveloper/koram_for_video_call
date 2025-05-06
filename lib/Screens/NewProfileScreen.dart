@@ -260,9 +260,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                                           color: backendColor,
                                         ),
                                       ),
-                                      imageUrl: G.HOST +
-                                          "api/v1/images/" +
-                                          loggedUser!.privateProfilePicUrl!,
+                                      imageUrl: loggedUser!.publicProfilePicUrl!,
                                     ),
                                   )
                                 // CachedNetworkImage(imageUrl:  G.HOST +

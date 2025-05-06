@@ -352,8 +352,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                               foregroundImage:
                                   UserClass.LoggedUser!.privateProfilePicUrl !=
                                           null
-                                      ? CachedNetworkImageProvider(G.HOST +
-                                          "api/v1/images/" +
+                                      ? CachedNetworkImageProvider(
                                           UserClass.LoggedUser!
                                               .privateProfilePicUrl!)
                                       : null,

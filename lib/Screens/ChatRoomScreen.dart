@@ -220,8 +220,10 @@ class _ChatRoomScreenChatState extends State<ChatRoomScreenChat>
           widget.groupName.id!,
           false);
       log("sending jpined room");
-      Provider.of<ChatSocket>(context, listen: false)
+     if (mounted){
+       Provider.of<ChatSocket>(context, listen: false)
           .sendJoinedRoom(G.userPhoneNumber, widget.groupName.id!);
+     }
       // }
       _scrollToBottom();
     });

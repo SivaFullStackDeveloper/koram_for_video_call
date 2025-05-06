@@ -711,14 +711,23 @@ class _ChattingScreenState extends State<ChattingScreen>
                           SizedBox(
                             width: 12,
                           ),
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: CommanWidgets().cacheProfileDisplay(widget
-                                    .otherUserDetail!.publicProfilePicUrl! ??
-                                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
-                          )
+                        
 
+                          CircleAvatar(
+                                                backgroundImage:
+                                                    AssetImage(
+                                                        "assets/profile.png"),
+                                                foregroundImage:
+                                                    CachedNetworkImageProvider(
+                                                        G.HOST +
+                                                            "api/v1/images/" +
+                                                            widget
+                                    .otherUserDetail!.publicProfilePicUrl!),
+                                                // onForegroundImageError: (){}AssetImage("assets/profile.png"),
+                                                radius: 30,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                              ),
                           // CachedNetworkImage(imageUrl: G.HOST +
                           //     "api/v1/images/" +
                           //     widget.groupName!.publicProfilePicUrl!,filterQuality: FilterQuality.low,),
@@ -763,8 +772,8 @@ class _ChattingScreenState extends State<ChattingScreen>
               actions: [
                 GestureDetector(
                     onTap: () async {
-                       Audio().playRingingSound();
-                  
+                      Audio().playRingingSound();
+
                       setState(() {
                         displayOptions = false;
                       });

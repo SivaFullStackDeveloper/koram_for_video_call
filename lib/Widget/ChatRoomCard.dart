@@ -282,7 +282,10 @@ class ChatRoomCard extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 20, 10, 20),
-                  child: SvgPicture.asset(image),
+                  child: SvgPicture.asset(image,colorFilter: ColorFilter.mode(
+                        backendColor,
+                        BlendMode.color,
+                      ),),
                 )
               ],
             ),

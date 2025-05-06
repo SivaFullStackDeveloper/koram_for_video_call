@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:koram_app/Helper/color.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -71,6 +72,11 @@ class _BoardingScreenState extends State<BoardingScreen> {
                     color: Colors.white,
                     child: SvgPicture.asset(
                       onboardingImages[index],
+                      fit: BoxFit.fitWidth,
+                      colorFilter: ColorFilter.mode(
+                        backendColor,
+                        BlendMode.color,
+                      ),
                     ),
                   ),
                 );

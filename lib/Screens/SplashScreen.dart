@@ -422,7 +422,7 @@ systemNavigationBarContrastEnforced: true
                       // height: height * .7,
                       child: SvgPicture.asset(
                         'assets/Splash2.svg',
-                        fit: BoxFit.fill,
+                       
                       ),
                     ),
                     SizedBox(

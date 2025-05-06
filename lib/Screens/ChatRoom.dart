@@ -352,16 +352,15 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
                         child: Container(
                           width: 41,
                           child: UserClass.LoggedUser != null &&
-                                  UserClass.LoggedUser!.privateProfilePicUrl !=
+                                  UserClass.LoggedUser!.publicProfilePicUrl !=
                                       null
                               ? CircleAvatar(
                                   backgroundImage:
                                       AssetImage("assets/profile.png"),
                                   foregroundImage: CachedNetworkImageProvider(
-                                      G.HOST +
-                                          "api/v1/images/" +
+                                      
                                           UserClass.LoggedUser!
-                                              .privateProfilePicUrl!),
+                                              .publicProfilePicUrl!),
                                   // onForegroundImageError: (){}AssetImage("assets/profile.png"),
                                   radius: 60,
                                   backgroundColor: Colors.grey[300],

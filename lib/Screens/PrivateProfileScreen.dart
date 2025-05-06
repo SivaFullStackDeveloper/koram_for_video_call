@@ -18,6 +18,7 @@ import 'package:koram_app/Models/User.dart';
 import 'package:koram_app/Screens/BoardingScreen.dart';
 import 'package:koram_app/Screens/SplashScreen.dart';
 import 'package:koram_app/Screens/test.dart';
+import 'package:koram_app/Widget/uploda.dart';
 import 'package:path/path.dart' as path;
 import 'package:async/async.dart';
 
@@ -867,33 +868,20 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                             SendingData = true;
                           });
                           if (tempImagePrivate != null) {
-                            var stream = http.ByteStream.fromBytes(
-                                tempImagePrivate!.readAsBytesSync());
-                            var length = await tempImagePrivate!.length();
-                            var uri = Uri.parse(G.HOST + "api/v1/images");
-                            var request =
-                                new http.MultipartRequest("POST", uri);
-                            var multipartFile = new http.MultipartFile(
-                                'myFile', stream, length,
-                                filename:
-                                    path.basename(tempImagePrivate!.path));
-                            request.files.add(multipartFile);
-                            var response = await request.send();
-                            response.stream
-                                .transform(utf8.decoder)
-                                .listen((value) async {
-                              uploadedImageData =
-                                  json.decode(value)[0]["mediaName"];
-                              // await G().saveImageToAppDirectory(
-                              //     tempImagePrivate!,
-                              //     'private',
-                              //     json.decode(value)[0]["mediaName"]);
+                           // Call the uploadImage method to get the final data
+  var final_data = await ImageUpload().uploadImage(tempImagePrivate!);
+  
+  // Decode the JSON response
+  final Map<String, dynamic> data = jsonDecode(final_data);
+  final String url = data['url'];
+
+  log("Uploaded Image URL: $url");
                               G.loggedinUser = UserDetail(
                                 ///private info
                                 privateName: _nameController.text,
                                 phoneNumber: G.userPhoneNumber,
                                 gender: genderValue,
-                                privateProfilePicUrl: uploadedImageData,
+                                privateProfilePicUrl: url,
                                 dateofbirth: UserDob,
 
                                 ///public info
@@ -901,7 +889,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                                     ? userModel.LoggedUser!.publicProfilePicUrl
                                     : "",
                                 publicGender: widget.isFromHome
-                                    ? userModel.LoggedUser!.publicProfilePicUrl
+                                    ? userModel.LoggedUser!.publicGender
                                     : "",
                                 publicName: widget.isFromHome
                                     ? userModel.LoggedUser!.publicName
@@ -916,7 +904,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                                 lon: long,
                               );
                               await userModel.addUser(G.loggedinUser, true);
-                            });
+                            
                             setState(() {
                               SendingData = false;
                             });

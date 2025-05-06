@@ -651,8 +651,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                               decoration: ShapeDecoration(
                                 image: widget.otherPersonData != null
                                     ? DecorationImage(
-                                        image: NetworkImage(G.HOST +
-                                            "api/v1/images/" +
+                                        image: NetworkImage(
                                             widget.otherPersonData!
                                                 .privateProfilePicUrl!),
                                         fit: BoxFit.cover,
@@ -913,7 +912,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                                 ),
                               ),
                               child: Center(
-                                  child: videoControl
+                                  child: _localStream.getVideoTracks()[0].enabled
                                       ? SvgPicture.asset("assets/video.svg")
                                       : Icon(
                                           Icons.videocam_off_outlined,
@@ -970,7 +969,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                                   ),
                                 ),
                                 child: Center(
-                                    child: widget.isVideoCall
+                                    child: widget.isVideoCall&&!speaker
                                         ? SvgPicture.asset(
                                             "assets/speakerLogo.svg")
                                         : Icon(

@@ -326,12 +326,11 @@ class _NearByScreenState extends State<NearByScreen> {
               child: Container(
                 width: 41,
                 child: UserClass.LoggedUser != null &&
-                        UserClass.LoggedUser!.privateProfilePicUrl != null
+                        UserClass.LoggedUser!.publicProfilePicUrl != null
                     ? CircleAvatar(
                         backgroundImage: AssetImage("assets/profile.png"),
-                        foregroundImage: CachedNetworkImageProvider(G.HOST +
-                            "api/v1/images/" +
-                            UserClass.LoggedUser!.privateProfilePicUrl!),
+                        foregroundImage: CachedNetworkImageProvider(
+                            UserClass.LoggedUser!.publicProfilePicUrl!),
                         // onForegroundImageError: (){}AssetImage("assets/profile.png"),
                         radius: 60,
                         backgroundColor: Colors.grey[300],

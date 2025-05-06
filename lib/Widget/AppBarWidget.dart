@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:koram_app/Models/NewUserModel.dart';
 import 'package:koram_app/Models/Notification.dart' as N;
+import 'package:koram_app/Models/User.dart';
 import 'package:provider/provider.dart';
 
 import '../Helper/Helper.dart';
@@ -9,13 +11,22 @@ import '../Screens/NewProfileScreen.dart';
 import 'Badge.dart';
 import 'BottomSheetContent.dart';
 
-class AppBarWidget extends StatelessWidget{
+class AppBarWidget extends StatefulWidget {
+  const AppBarWidget({super.key});
 
+  @override
+  State<AppBarWidget> createState() => _AppBarWidgetState();
+}
+
+class _AppBarWidgetState extends State<AppBarWidget> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     List<N.Notification> notification =
         Provider.of<N.Notifications>(context).notification;
+    UsersProviderClass UserPro =
+        Provider.of<UsersProviderClass>(context, listen: true);
+    UserDetail? loggedUser = UserPro.LoggedUser;
     return AppBar(
       elevation: 1,
       automaticallyImplyLeading: false,
@@ -42,7 +53,6 @@ class AppBarWidget extends StatelessWidget{
           ),
         ],
       ),
-
       actions: [
         // GestureDetector(
         //     onTap: () async {
@@ -83,24 +93,29 @@ class AppBarWidget extends StatelessWidget{
                   child: SvgPicture.asset("assets/notify bell.svg")),
               value: notification.length),
         ),
-        SizedBox(width: 10,),
+        SizedBox(
+          width: 10,
+        ),
+        
         GestureDetector(
           onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => NewProfileScreen()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (ctx) => NewProfileScreen()));
           },
           child: Container(
             width: 31.94,
             height: 31.94,
             decoration: ShapeDecoration(
-              image:G.loggedinUser.publicProfilePicUrl!=""? DecorationImage(
-                image:NetworkImage(G.HOST + "api/v1/images/" + G.loggedinUser.publicProfilePicUrl!),
-                fit: BoxFit.contain,
-              ):DecorationImage(image: AssetImage("assets/profile.png"),fit: BoxFit.contain),
-
+              image: loggedUser!.publicProfilePicUrl != ""
+                  ? DecorationImage(
+                      image: NetworkImage(loggedUser.publicProfilePicUrl!),
+                      fit: BoxFit.contain,
+                    )
+                  : DecorationImage(
+                      image: AssetImage("assets/profile.png"),
+                      fit: BoxFit.contain),
               shape: CircleBorder(),
             ),
-
           ),
         ),
         SizedBox(
@@ -115,10 +130,7 @@ class AppBarWidget extends StatelessWidget{
         //         // margin: EdgeInsets.all(8),
         //         height: 30,
         //         child: Image.asset("assets/Mask Group 1.png"))),
-
       ],
     );
-
   }
-
 }
