@@ -229,7 +229,9 @@ class DBProvider {
 
   deleteAll() async {
     final db = await database;
-    db.rawDelete("Delete * from PrivateMessage");
+    await db.delete("message");
+    await db.delete("userDetails");
+    
   }
 
   Future<void> insertUserDetail(UserDetail userDetail) async {

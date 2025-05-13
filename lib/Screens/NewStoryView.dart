@@ -118,7 +118,7 @@ class _NewStoryViewState extends State<NewStoryView> {
       if (getFileExtension(i.storyUrl!) == "Image") {
         log("added image ${i}");
         storyItems.add(StoryItem.pageImage(
-            url: G.HOST + "api/v1/images/" + i.storyUrl!,
+            url: i.storyUrl!,
             controller: strController,
             duration: Duration(seconds: 3)));
       } else if (getFileExtension(i.storyUrl!) == "Video") {

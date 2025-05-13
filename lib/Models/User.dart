@@ -209,7 +209,7 @@ class UsersProviderClass with ChangeNotifier {
   List<String> unmatchedPhoneNumbers = [];
 
   saveValueFromDb() async {
-    finalFriendsList = await DBProvider.db.getAllUserDetails();
+    //finalFriendsList = await DBProvider.db.getAllUserDetails();
     SavedMessages = await DBProvider.db.getAllPrivateMessages();
 
     log("saved messages ${SavedMessages}");
@@ -220,18 +220,24 @@ class UsersProviderClass with ChangeNotifier {
               msg.sentTo == friend.phoneNumber ||
               msg.sentBy == friend.phoneNumber)
           .toList();
-
+      notifyListeners();
       relevantMessages.sort((a, b) => b.time.compareTo(a.time));
+      notifyListeners();
 
       if (relevantMessages.isNotEmpty) {
         friend.latestMessage = relevantMessages.first.message;
+        notifyListeners();
         friend.recieveTime = DateTime.parse(relevantMessages.first.time);
+        notifyListeners();
       }
       int index = copyOfFriendsList
           .indexWhere((f) => f.phoneNumber == friend.phoneNumber);
+      notifyListeners();
       if (index != -1) {
         // Replace the old value with the new one
         copyOfFriendsList[index] = friend;
+          
+        notifyListeners();
       }
     }
 

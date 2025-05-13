@@ -19,6 +19,7 @@ import 'package:koram_app/Helper/background_services.dart';
 import 'package:koram_app/Helper/color.dart';
 import 'package:koram_app/Models/ChatRoom.dart';
 import 'package:koram_app/Models/NewUserModel.dart';
+import 'package:koram_app/Widget/uploda.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:koram_app/Models/Message.dart';
@@ -181,25 +182,25 @@ class _ChattingScreenState extends State<ChattingScreen>
     final picker = ImagePicker();
     final XFile? image =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 30);
+final File image2 = File(image!.path);
+    // if (image != null) {
+    //   File? croppedImage = await cropImage(image, context);
+    //   var request =
+    //       http.MultipartRequest('POST', Uri.parse(G.HOST + "api/v1/images"));
+    //   request.files.add(http.MultipartFile(
+    //     'image', // Field name for the file
+    //     http.ByteStream(croppedImage!.openRead()),
+    //     await croppedImage.length(),
+    //     filename: path.basename(croppedImage.path),
+    //   ));
 
-    if (image != null) {
-      File? croppedImage = await cropImage(image, context);
-      var request =
-          http.MultipartRequest('POST', Uri.parse(G.HOST + "api/v1/images"));
-      request.files.add(http.MultipartFile(
-        'image', // Field name for the file
-        http.ByteStream(croppedImage!.openRead()),
-        await croppedImage.length(),
-        filename: path.basename(croppedImage.path),
-      ));
-
-      var response = await request.send();
-
-      response.stream.transform(utf8.decoder).listen((value) async {
-        json.decode(value)[0]["mediaName"];
-        log("REsponse Stram ");
+      //var response = await request.send();
+        var response =await ImageUpload().uploadImage(image2);
+final Map<String, dynamic> data = jsonDecode(response);
+  final String url = data['url'];
+         log("REsponse Stram ");
         String messageId = uuid.v1();
-        print(json.decode(value));
+       
         var messageJson = {
           "messageId": messageId,
           "senderName": G.loggedinUser.privateName,
@@ -208,7 +209,7 @@ class _ChattingScreenState extends State<ChattingScreen>
           "sentBy": G.userPhoneNumber,
           "sentTo": widget.otherUserDetail?.phoneNumber,
           "time": DateTime.now().toString(),
-          "fileName": json.decode(value)[0]["mediaName"]
+          "fileName": url
         };
         bool isSent = await c.sendMessage(messageJson);
         log("value of is messahe sent $isSent");
@@ -220,7 +221,7 @@ class _ChattingScreenState extends State<ChattingScreen>
             time: DateTime.now().toString(),
             sentBy: G.userPhoneNumber,
             sentTo: widget.otherUserDetail?.phoneNumber,
-            fileName: json.decode(value)[0]["mediaName"],
+            fileName: url,
             messageStatus: isSent ? "sent" : "notSent",
             isRead: true,
             isDelivered: false,
@@ -233,13 +234,13 @@ class _ChattingScreenState extends State<ChattingScreen>
           PvtMessageShowOnScreen.add(pvtMessage);
         });
         DBProvider.db.newPrivateMessage(pvtMessage);
-      });
+      
 
       // Do something with the captured image, e.g., upload it to a server
       // You can use the 'http' package for uploading to a server
       // Example: await _uploadImageToServer(File(image.path));
     }
-  }
+  
 
   Future<void> _uploadFiles(ChatSocket chatSock, BuildContext context) async {
     String uploadUrl = G.HOST + "api/v1/saveImg";
@@ -719,9 +720,7 @@ class _ChattingScreenState extends State<ChattingScreen>
                                                         "assets/profile.png"),
                                                 foregroundImage:
                                                     CachedNetworkImageProvider(
-                                                        G.HOST +
-                                                            "api/v1/images/" +
-                                                            widget
+                                                        widget
                                     .otherUserDetail!.publicProfilePicUrl!),
                                                 // onForegroundImageError: (){}AssetImage("assets/profile.png"),
                                                 radius: 30,

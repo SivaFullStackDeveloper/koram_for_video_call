@@ -33,6 +33,7 @@ import 'package:koram_app/Screens/storyPage.dart';
 import 'package:koram_app/Widget/Badge.dart';
 import 'package:koram_app/Widget/status-item.dart';
 import 'package:koram_app/Models/Notification.dart' as N;
+import 'package:koram_app/Widget/uploda.dart';
 
 import 'package:path/path.dart' as path;
 import 'package:async/async.dart';
@@ -129,8 +130,11 @@ class _ChatScreenState extends State<ChatScreen>
     });
   }
 
+  FocusNode searchFocusNode = FocusNode();
+
   @override
   void dispose() {
+    searchFocusNode.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -186,12 +190,7 @@ class _ChatScreenState extends State<ChatScreen>
   addStory() async {
     log("called add story ");
 
-    log("after the internet check ");
-    // setState(() {
-    //   isAddingStory = true;
-    // });
-    // var stream = new http.ByteStream(DelegatingStream.typed(image!.openRead()));
-
+    // Check server reachability
     var checkUri = Uri.parse(G.HOST + "api/v1/testServer");
     var urlResponse;
     try {
@@ -199,59 +198,124 @@ class _ChatScreenState extends State<ChatScreen>
     } catch (e) {
       log("URL validation failed: $e");
       CommanWidgets().showSnackBar(
-          context,
-          "Failed to connect to the server. Please try again later.",
-          Colors.red);
+        context,
+        "Failed to connect to the server. Please try again later.",
+        Colors.red,
+      );
       return;
     }
 
     if (urlResponse.statusCode != 200) {
       log("Invalid URL or server not reachable ${urlResponse.statusCode}");
       CommanWidgets().showSnackBar(
-          context, "Server not reachable. Please try again later.", Colors.red);
+        context,
+        "Server not reachable. Please try again later.",
+        Colors.red,
+      );
       return;
     }
-    var stream = http.ByteStream.fromBytes(image!.readAsBytesSync());
-    // get file length
-    var length = await image!.length();
 
-    // string to uri
-    var uri = Uri.parse(G.HOST + "api/v1/images");
-
-    // create multipart request
-    var request = new http.MultipartRequest("POST", uri);
-
-    // multipart that takes file
-    var multipartFile = new http.MultipartFile('myFile', stream, length,
-        filename: path.basename(image!.path));
-
-    // add file to multipart
-    request.files.add(multipartFile);
-
-    // send
-    var response;
+    // Upload image using custom upload class
     try {
-      log("inside the try");
-      response = await request.send().timeout(Duration(seconds: 5));
-      response.stream.transform(utf8.decoder).listen((value) async {
-        log("paruuu ${json.decode(value)}");
-        // print(json.decode(value)[0]["mediaName"]);
-        await Provider.of<UsersProviderClass>(context, listen: false)
-            .addStory(json.decode(value)[0]["mediaName"], G.userPhoneNumber);
-      });
-      // initialize();
-      CommanWidgets()
-          .showSnackBar(context, "Successfully added your story", Colors.green);
-    } catch (e) {
-      log("insdie the error ");
-      log("eeeeeeE$e");
-    }
+      var finalData =
+          await ImageUpload().uploadImage(image!); // Use your image file
+      final Map<String, dynamic> data = jsonDecode(finalData);
+      final String url = data['url'];
 
-    log(" Statis code of response ${response.statusCode}");
+      log("Uploaded Image URL: $url");
+
+      // Save story via provider
+      await Provider.of<UsersProviderClass>(context, listen: false)
+          .addStory(url, G.userPhoneNumber);
+
+      CommanWidgets().showSnackBar(
+        context,
+        "Successfully added your story",
+        Colors.green,
+      );
+    } catch (e) {
+      log("Upload failed: $e");
+      CommanWidgets().showSnackBar(
+        context,
+        "Upload failed. Please try again later.",
+        Colors.red,
+      );
+      return;
+    }
 
     log("last line of add story ");
     chatInitialize();
   }
+
+  // addStory() async {
+  //   log("called add story ");
+
+  //   log("after the internet check ");
+  //   // setState(() {
+  //   //   isAddingStory = true;
+  //   // });
+  //   // var stream = new http.ByteStream(DelegatingStream.typed(image!.openRead()));
+
+  //   var checkUri = Uri.parse(G.HOST + "api/v1/testServer");
+  //   var urlResponse;
+  //   try {
+  //     urlResponse = await http.get(checkUri).timeout(Duration(seconds: 10));
+  //   } catch (e) {
+  //     log("URL validation failed: $e");
+  //     CommanWidgets().showSnackBar(
+  //         context,
+  //         "Failed to connect to the server. Please try again later.",
+  //         Colors.red);
+  //     return;
+  //   }
+
+  //   if (urlResponse.statusCode != 200) {
+  //     log("Invalid URL or server not reachable ${urlResponse.statusCode}");
+  //     CommanWidgets().showSnackBar(
+  //         context, "Server not reachable. Please try again later.", Colors.red);
+  //     return;
+  //   }
+  //   var stream = http.ByteStream.fromBytes(image!.readAsBytesSync());
+  //   // get file length
+  //   var length = await image!.length();
+
+  //   // string to uri
+  //   var uri = Uri.parse(G.HOST + "api/v1/images");
+
+  //   // create multipart request
+  //   var request = new http.MultipartRequest("POST", uri);
+
+  //   // multipart that takes file
+  //   var multipartFile = new http.MultipartFile('myFile', stream, length,
+  //       filename: path.basename(image!.path));
+
+  //   // add file to multipart
+  //   request.files.add(multipartFile);
+
+  //   // send
+  //   var response;
+  //   try {
+  //     log("inside the try");
+  //     response = await request.send().timeout(Duration(seconds: 5));
+  //     response.stream.transform(utf8.decoder).listen((value) async {
+  //       log("paruuu ${json.decode(value)}");
+  //       // print(json.decode(value)[0]["mediaName"]);
+  //       await Provider.of<UsersProviderClass>(context, listen: false)
+  //           .addStory(json.decode(value)[0]["mediaName"], G.userPhoneNumber);
+  //     });
+  //     // initialize();
+  //     CommanWidgets()
+  //         .showSnackBar(context, "Successfully added your story", Colors.green);
+  //   } catch (e) {
+  //     log("insdie the error ");
+  //     log("eeeeeeE$e");
+  //   }
+
+  //   log(" Statis code of response ${response.statusCode}");
+
+  //   log("last line of add story ");
+  //   chatInitialize();
+  // }
 
   String messageIdTemp = "";
 
@@ -479,6 +543,9 @@ class _ChatScreenState extends State<ChatScreen>
             ? AppBar(
                 backgroundColor: Colors.white,
                 title: TextField(
+                  enabled: true,
+                  autofocus: true,
+                  focusNode: searchFocusNode,
                   controller: searchValue,
                   onChanged: (v) {
                     log("the text valuee ${v}");
@@ -583,6 +650,10 @@ class _ChatScreenState extends State<ChatScreen>
                       setState(() {
                         isSearchClicked = true;
                       });
+
+                      Future.delayed(Duration(milliseconds: 100), () {
+                        FocusScope.of(context).requestFocus(searchFocusNode);
+                      });
                     },
                     child: Container(
                       width: 30,
@@ -632,9 +703,7 @@ class _ChatScreenState extends State<ChatScreen>
                                 backgroundImage:
                                     AssetImage("assets/profile.png"),
                                 foregroundImage: CachedNetworkImageProvider(
-                                   
-                                        UserClass
-                                            .LoggedUser!.publicProfilePicUrl!),
+                                    UserClass.LoggedUser!.publicProfilePicUrl!),
                                 // onForegroundImageError: (){}AssetImage("assets/profile.png"),
                                 radius: 60,
                                 backgroundColor: Colors.grey[300],
@@ -720,6 +789,7 @@ class _ChatScreenState extends State<ChatScreen>
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
+                                          
                                           Stack(children: [
                                             UnseenStory.contains(
                                                     FinalFriendList[i])
@@ -742,28 +812,23 @@ class _ChatScreenState extends State<ChatScreen>
                                             //         : Image(
                                             //             image: AssetImage(
                                             //                 "assets/profile.png"))
-                                            //     ), 
+                                            //     ),
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 4.0),
                                               child: CircleAvatar(
-                                                backgroundImage:
-                                                    AssetImage(
-                                                        "assets/profile.png"),
+                                                backgroundImage: AssetImage(
+                                                    "assets/profile.png"),
                                                 foregroundImage:
                                                     CachedNetworkImageProvider(
-                                                        G.HOST +
-                                                            "api/v1/images/" +
-                                                            FinalFriendList[i]
-                                                                .publicProfilePicUrl!),
+                                                        FinalFriendList[i]
+                                                            .publicProfilePicUrl!),
                                                 // onForegroundImageError: (){}AssetImage("assets/profile.png"),
                                                 radius: 30,
                                                 backgroundColor:
                                                     Colors.grey[300],
                                               ),
                                             )
-
-
                                           ]),
                                           SizedBox(
                                             width: 8,
@@ -1231,10 +1296,8 @@ class _ChatScreenState extends State<ChatScreen>
                                                             Colors.transparent,
                                                       ),
                                                     ),
-                                                    imageUrl: G.HOST +
-                                                        "api/v1/images/" +
-                                                        G.loggedinUser
-                                                            .publicProfilePicUrl!,
+                                                    imageUrl: G.loggedinUser
+                                                        .publicProfilePicUrl!,
                                                   ),
                                                 ),
                                               ),
@@ -1363,9 +1426,7 @@ class _ChatScreenState extends State<ChatScreen>
                                                                   ? DecorationImage(
                                                                       image:
                                                                           CachedNetworkImageProvider(
-                                                                        G.HOST +
-                                                                            "api/v1/images/" +
-                                                                            item.publicProfilePicUrl!,
+                                                                        item.publicProfilePicUrl!,
                                                                       ),
                                                                       // NetworkImage(G
                                                                       //         .HOST +
@@ -1523,9 +1584,7 @@ class _ChatScreenState extends State<ChatScreen>
                                                                     ? DecorationImage(
                                                                         image:
                                                                             CachedNetworkImageProvider(
-                                                                          G.HOST +
-                                                                              "api/v1/images/" +
-                                                                              item.publicProfilePicUrl!,
+                                                                          item.publicProfilePicUrl!,
                                                                         ),
                                                                         // NetworkImage(G
                                                                         //         .HOST +

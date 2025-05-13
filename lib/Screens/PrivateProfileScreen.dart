@@ -191,8 +191,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
         if (G.loggedinUser.privateProfilePicUrl != "") {
           log("private pic url in g." +
               G.loggedinUser.privateProfilePicUrl.toString());
-          return NetworkImage(
-              G.HOST + "api/v1/images/" + G.loggedinUser.privateProfilePicUrl!);
+          return NetworkImage( G.loggedinUser.privateProfilePicUrl!);
         }
       } else {
         return null;
@@ -633,7 +632,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                   ),
                 ),
               ]),
-              Row(
+              widget.isFromHome==false? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
@@ -700,7 +699,7 @@ class _PrivateProfileScreenState extends State<PrivateProfileScreen> {
                     ],
                   ),
                 ],
-              ),
+              ):Container(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

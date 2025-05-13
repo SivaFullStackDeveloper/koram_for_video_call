@@ -21,7 +21,7 @@ class StoryItem extends StatelessWidget {
         painter: StatusPainter(false),
         child: CircleAvatar(
             radius: 27,
-            backgroundImage: NetworkImage(G.HOST + "api/v1/images/" + image))
+            backgroundImage: NetworkImage( image))
 
         // AssetImage("assets/$image")),
         );

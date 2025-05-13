@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter/material.dart';
@@ -109,75 +109,155 @@ class _AddContactScreenState extends State<AddContactScreen> {
       });
     }
   }
+Future<void> _fetchContacts() async {
+  // Check and request contacts permission
+  if (await Permission.contacts.request().isGranted) {
+    try {
+      setState(() {
+        isLoading = true;
+      });
 
-  Future<void> _fetchContacts() async {
-    // Check and request contacts permission
-    if (await Permission.contacts.request().isGranted) {
-      try {
-        setState(() {
-          isLoading = true;
-        });
+      final UsersProviderClass usersProvider =
+          Provider.of<UsersProviderClass>(context, listen: false);
 
-        final UsersProviderClass usersProvider =
-            Provider.of<UsersProviderClass>(context, listen: false);
+      // Fetch local mobile contacts
+      List<Contact> allContacts =
+          await FlutterContacts.getContacts(withProperties: true);
 
-        // Fetch local mobile contacts
-        List<Contact> allContacts =
-            await FlutterContacts.getContacts(withProperties: true);
+      // Filter contacts to only include those with phone numbers
+      allContacts = allContacts
+          .where((contact) =>
+              contact.phones != null &&
+              contact.displayName != null &&
+              contact.phones!.isNotEmpty)
+          .toList();
 
-        // Filter contacts to only include those with phone numbers
-        allContacts = allContacts
-            .where((contact) =>
-                contact.phones != null &&
-                contact.displayName != null &&
-                contact.phones!.isNotEmpty)
-            .toList();
+      log("Total local contacts fetched: ${allContacts.length}");
 
-        log("Total local contacts fetched: ${allContacts.length}");
+      // Extract all phone numbers (normalized)
+      List<String> contactList = allContacts
+          .expand((contact) =>
+              contact.phones!.map((phone) => phone.normalizedNumber ?? ""))
+          .toList();
 
-        // Extract all phone numbers (normalized)
-        List<String> contactList = allContacts
-            .expand((contact) =>
-                contact.phones!.map((phone) => phone.normalizedNumber ?? ""))
-            .toList();
+      log("Extracted phone numbers: ${contactList.length}");
 
-        log("Extracted phone numbers: ${contactList.length}");
+      // Send contacts to the API for matching
+      ContactResponse contactResponse =
+          await usersProvider.getContactUsers(contactList);
+      log("API Response: ${contactResponse.toJson()}");
 
-        // Send contacts to the API for matching
-        ContactResponse contactResponse =
-            await usersProvider.getContactUsers(contactList);
-        log("API Response: ${contactResponse.toJson()}");
+      // Store matched and unmatched contacts
+      contactInKoram = contactResponse.matchedUsers;
+      notInKoram = contactResponse.unmatchedPhoneNumbers;
 
-        // Store matched and unmatched contacts
-        contactInKoram = contactResponse.matchedUsers;
-        notInKoram = contactResponse.unmatchedPhoneNumbers;
+      // Convert matched contacts into a map with phone number as key
+      Map<String, String> apiContactMap = {
+        for (var user in contactInKoram)
+          cleanPhoneNumber(user.phoneNumber ?? ""): user.publicName ?? ""
+      };
 
-        // Filter unmatched contacts from local contacts
-        filteredList = allContacts
-            .where((contact) => contact.phones!.any((phone) => notInKoram
-                .contains(cleanPhoneNumber(phone.normalizedNumber ?? ""))))
-            .toList();
-
-        filteredList = filteredList.toSet().toList();
-
-        setState(() {
-          displayedContacts = filteredList.take(batchSize).toList();
-          isLoading = false;
-        });
-      } catch (e) {
-        log("Error fetching contacts: $e");
-        CommanWidgets()
-            .showSnackBar(context, "Error, please try again later", Colors.red);
-        setState(() {
-          isLoading = false;
-        });
+      // Iterate through local contacts and update name if the phone matches
+      for (var contact in allContacts) {
+        for (var phone in contact.phones) {
+          String normalizedPhone = cleanPhoneNumber(phone.normalizedNumber ?? "");
+          if (apiContactMap.containsKey(normalizedPhone)) {
+            contact.displayName = apiContactMap[normalizedPhone]!;  // Update the name
+            break;
+          }
+        }
       }
-    } else {
-      log("Contacts permission denied");
-      CommanWidgets().showSnackBar(
-          context, "Permission denied. Please allow access.", Colors.red);
+
+      // Set the filtered list (all contacts, now with updated names if applicable)
+      filteredList = allContacts;
+
+      setState(() {
+        displayedContacts = filteredList.take(batchSize).toList();
+        isLoading = false;
+      });
+    } catch (e) {
+      log("Error fetching contacts: $e");
+      CommanWidgets()
+          .showSnackBar(context, "Error, please try again later", Colors.red);
+      setState(() {
+        isLoading = false;
+      });
     }
+  } else {
+    log("Contacts permission denied");
+    CommanWidgets().showSnackBar(
+        context, "Permission denied. Please allow access.", Colors.red);
   }
+}
+
+  // Future<void> _fetchContacts() async {
+  //   // Check and request contacts permission
+  //   if (await Permission.contacts.request().isGranted) {
+  //     try {
+  //       setState(() {
+  //         isLoading = true;
+  //       });
+
+  //       final UsersProviderClass usersProvider =
+  //           Provider.of<UsersProviderClass>(context, listen: false);
+
+  //       // Fetch local mobile contacts
+  //       List<Contact> allContacts =
+  //           await FlutterContacts.getContacts(withProperties: true);
+
+  //       // Filter contacts to only include those with phone numbers
+  //       allContacts = allContacts
+  //           .where((contact) =>
+  //               contact.phones != null &&
+  //               contact.displayName != null &&
+  //               contact.phones!.isNotEmpty)
+  //           .toList();
+
+  //       log("Total local contacts fetched: ${allContacts.length}");
+
+  //       // Extract all phone numbers (normalized)
+  //       List<String> contactList = allContacts
+  //           .expand((contact) =>
+  //               contact.phones!.map((phone) => phone.normalizedNumber ?? ""))
+  //           .toList();
+
+  //       log("Extracted phone numbers: ${contactList.length}");
+
+  //       // Send contacts to the API for matching
+  //       ContactResponse contactResponse =
+  //           await usersProvider.getContactUsers(contactList);
+  //       log("API Response: ${contactResponse.toJson()}");
+
+  //       // Store matched and unmatched contacts
+  //       contactInKoram = contactResponse.matchedUsers;
+  //       notInKoram = contactResponse.unmatchedPhoneNumbers;
+
+  //       // Filter unmatched contacts from local contacts
+  //       filteredList = allContacts
+  //           .where((contact) => contact.phones!.any((phone) => notInKoram
+  //               .contains(cleanPhoneNumber(phone.normalizedNumber ?? ""))))
+  //           .toList();
+
+  //       filteredList = filteredList.toSet().toList();
+
+  //       setState(() {
+  //         displayedContacts = filteredList.take(batchSize).toList();
+  //         isLoading = false;
+  //       });
+  //     } catch (e) {
+  //       log("Error fetching contacts: $e");
+  //       CommanWidgets()
+  //           .showSnackBar(context, "Error, please try again later", Colors.red);
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //     }
+  //   } else {
+  //     log("Contacts permission denied");
+  //     CommanWidgets().showSnackBar(
+  //         context, "Permission denied. Please allow access.", Colors.red);
+  //   }
+  // }
 
   // Future<void> _fetchContacts() async {
   //     await Permission.contacts.request();
@@ -323,19 +403,36 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: TextButton(
-              onPressed: () {
+              onPressed: () async {
+                // String message =
+                //     "Hey, join me on Koram! It’s a chat app where you can chat with friends and meet new people nearby. Download it now!";
+                // String downloadLink =
+                //     'https://play.google.com/apps/internaltest/4701747546792537740';
+
+                // if (c.phones != null && c.phones!.isNotEmpty) {
+                //   List<String> recipients = [
+                //     c.phones!.first.normalizedNumber!.trim()
+                //   ];
+                //   sendDirectSms(message, downloadLink, recipients);
+                // } else {
+                //   log("No phone number found for ${c.displayName}");
+                // }
+
                 String message =
                     "Hey, join me on Koram! It’s a chat app where you can chat with friends and meet new people nearby. Download it now!";
                 String downloadLink =
                     'https://play.google.com/apps/internaltest/4701747546792537740';
 
+                String fullMessage =
+                    Uri.encodeComponent("$message\n$downloadLink");
+
                 if (c.phones != null && c.phones!.isNotEmpty) {
-                  List<String> recipients = [
-                    c.phones!.first.normalizedNumber!.trim()
-                  ];
-                  sendDirectSms(message, downloadLink, recipients);
-                } else {
-                  log("No phone number found for ${c.displayName}");
+                  String phone = c.phones!.first.normalizedNumber!.trim();
+
+                  // Remove special characters and spaces from phone number
+                  phone = phone.replaceAll(RegExp(r'[^\d+]'), '');
+
+                  showShareOptionsBottomSheet(context, phone);
                 }
               },
               child: Text(
@@ -626,7 +723,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       foregroundImage: CachedNetworkImageProvider(c
                                   .publicProfilePicUrl !=
                               null
-                          ?  c.publicProfilePicUrl!
+                          ? c.publicProfilePicUrl!
                           : "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg"),
                       radius: 60,
                       backgroundColor: Colors.grey[300],
@@ -786,7 +883,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     showDialog(
                       context: context,
@@ -977,6 +1074,78 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void showShareOptionsBottomSheet(BuildContext context, String phone) {
+    String message =
+        "Hey, join me on Koram! It’s a chat app where you can chat with friends and meet new people nearby. Download it now!";
+    String downloadLink =
+        'https://play.google.com/apps/internaltest/4701747546792537740';
+
+    String fullMessage = Uri.encodeComponent("$message\n$downloadLink");
+
+    String normalizedPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Required to allow custom height
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          height: 300, // Set desired height here
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              SizedBox(height: 20),
+              ListTile(
+                leading: Icon(Icons.sms, color: Colors.blue),
+                title: Text("Share via SMS"),
+                onTap: () async {
+                  String smsUrl = "sms:$normalizedPhone?body=$fullMessage";
+                  if (await canLaunchUrl(Uri.parse(smsUrl))) {
+                    await launchUrl(Uri.parse(smsUrl));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("SMS not supported on this device.")),
+                    );
+                  }
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green),
+                title: Text("Share via WhatsApp"),
+                onTap: () async {
+                  String whatsappUrl =
+                      "https://wa.me/$normalizedPhone?text=$fullMessage";
+                  if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+                    await launchUrl(Uri.parse(whatsappUrl),
+                        mode: LaunchMode.externalApplication);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("WhatsApp is not installed.")),
+                    );
+                  }
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

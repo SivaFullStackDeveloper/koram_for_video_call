@@ -111,8 +111,7 @@ class _MyStatusState extends State<MyStatus> {
                                         progress.progress,
                                       ),
                                     ),
-                                imageUrl: G.HOST +
-                                    "api/v1/images/" +
+                                imageUrl: 
                                     G.loggedinUser
                                         .publicProfilePicUrl!,
 

@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:koram_app/Helper/DBHelper.dart';
 import 'package:koram_app/Helper/RuntimeStorage.dart';
 import 'package:koram_app/Screens/LoginScreen.dart';
 import 'package:provider/provider.dart';
@@ -106,12 +107,21 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
           imgURl: "assets/log-out.svg",
           onTap: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              prefs.setString("userId", "");
-              prefs.setBool('logedIn', false);
-              G.userPhoneNumber = "";
-              G.logedIn = false;
-            });
+            await prefs.clear();
+
+            // Step 3: Clear all local database entries
+            await DBProvider.db.deleteAll();
+
+            // Step 4: Clear any global variables
+            G.userPhoneNumber = "";
+            G.logedIn = false;
+            await DBProvider.db.deleteAll();
+            // setState(() {
+            //   prefs.setString("userId", "");
+            //   prefs.setBool('logedIn', false);
+            //   G.userPhoneNumber = "";
+            //   G.logedIn = false;
+            // });
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (ctx) => LoginScreen(
                       ispoped: false,
@@ -260,7 +270,8 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                                           color: backendColor,
                                         ),
                                       ),
-                                      imageUrl: loggedUser!.publicProfilePicUrl!,
+                                      imageUrl:
+                                          loggedUser!.publicProfilePicUrl!,
                                     ),
                                   )
                                 // CachedNetworkImage(imageUrl:  G.HOST +

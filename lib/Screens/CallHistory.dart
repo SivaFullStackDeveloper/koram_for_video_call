@@ -324,48 +324,70 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                 //         height: 30,
                 //         child: Text("logout"))),
                 GestureDetector(
-                  onTap: () {
-                    isSearchClicked = !isSearchClicked;
-                    setState(() {});
-                  },
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(),
-                    child: SvgPicture.asset("assets/Vector.svg"),
-                  ),
-                ),
+  onTap: () {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (ctx) => NewProfileScreen()),
+    );
+  },
+  child: Container(
+    width: 41,
+    child: CircleAvatar(
+      radius: 60,
+      backgroundColor: Colors.grey[300],
+      backgroundImage: AssetImage("assets/profile.png"),
+      foregroundImage: (UserClass.LoggedUser != null &&
+              UserClass.LoggedUser!.publicProfilePicUrl!.isNotEmpty)
+          ? CachedNetworkImageProvider(
+              UserClass.LoggedUser!.publicProfilePicUrl!,
+            )
+          : null,
+    ),
+  ),
+),
 
-                SizedBox(
-                  width: 10,
-                ),
-                GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (ctx) => NewProfileScreen()));
-                    },
-                    child: Container(
-                      width: 41,
-                      child: UserClass.LoggedUser != null
-                          ? CircleAvatar(
-                              backgroundImage: AssetImage("assets/profile.png"),
-                              foregroundImage:
-                                  UserClass.LoggedUser!.privateProfilePicUrl !=
-                                          null
-                                      ? CachedNetworkImageProvider(
-                                          UserClass.LoggedUser!
-                                              .privateProfilePicUrl!)
-                                      : null,
-                              // onForegroundImageError: (){}AssetImage("assets/profile.png"),
-                              radius: 60,
-                              backgroundColor: Colors.grey[300],
-                            )
-                          : CircleAvatar(
-                              backgroundImage: AssetImage("assets/profile.png"),
-                              radius: 60,
-                              backgroundColor: Colors.grey[300],
-                            ),
-                    )),
+                // GestureDetector(
+                //   onTap: () {
+                //     isSearchClicked = !isSearchClicked;
+                //     setState(() {});
+                //   },
+                //   child: Container(
+                //     width: 30,
+                //     height: 30,
+                //     decoration: BoxDecoration(),
+                //     child: SvgPicture.asset("assets/Vector.svg"),
+                //   ),
+                // ),
+
+                // SizedBox(
+                //   width: 10,
+                // ),
+                // GestureDetector(
+                //     onTap: () {
+                //       Navigator.of(context).push(MaterialPageRoute(
+                //           builder: (ctx) => NewProfileScreen()));
+                //     },
+                //     child: Container(
+                //       width: 41,
+                //       child: UserClass.LoggedUser != null
+                //           ? CircleAvatar(
+                //               backgroundImage: AssetImage("assets/profile.png"),
+                //               foregroundImage:
+                //                   UserClass.LoggedUser!.privateProfilePicUrl !=
+                //                           null
+                //                       ? CachedNetworkImageProvider(
+                //                           UserClass.LoggedUser!
+                //                               .privateProfilePicUrl!)
+                //                       : null,
+                //               // onForegroundImageError: (){}AssetImage("assets/profile.png"),
+                //               radius: 60,
+                //               backgroundColor: Colors.grey[300],
+                //             )
+                //           : CircleAvatar(
+                //               backgroundImage: AssetImage("assets/profile.png"),
+                //               radius: 60,
+                //               backgroundColor: Colors.grey[300],
+                //             ),
+                //     )),
                 SizedBox(
                   width: 19,
                 ),
@@ -410,6 +432,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                   ),
                 )
               : ListView.builder(
+                reverse: true,
                   physics: BouncingScrollPhysics(),
                   itemCount: callHistory.length,
                   itemBuilder: (ctx, i) {

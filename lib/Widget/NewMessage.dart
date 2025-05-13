@@ -288,9 +288,7 @@ class _NewMessageState extends State<NewMessage> {
                           // Full-screen image
                           Positioned.fill(
                             child: CachedNetworkImage(
-                              imageUrl: G.HOST +
-                                  "api/v1/images/" +
-                                  widget.messageData.fileName.toString(),
+                              imageUrl: widget.messageData.fileName.toString(),
                               filterQuality: FilterQuality.medium,
                               fit: BoxFit
                                   .cover, // Make sure the image covers the entire screen
@@ -351,9 +349,7 @@ class _NewMessageState extends State<NewMessage> {
                     color: RuntimeStorage().PrimaryOrange,
                     image: DecorationImage(
                       image: CachedNetworkImageProvider(
-                        G.HOST +
-                            "api/v1/images/" +
-                            widget.messageData.fileName.toString(),
+                        widget.messageData.fileName.toString(),
                       ),
                       fit: BoxFit.cover,
                       filterQuality: FilterQuality.low,
@@ -371,7 +367,7 @@ class _NewMessageState extends State<NewMessage> {
                           bottom: 0,
                           right: 0,
                           child: Container(
-                            width: 60,
+                            width: 70,
                             height: 30,
                             decoration: BoxDecoration(
 
@@ -857,7 +853,10 @@ class _NewMessageState extends State<NewMessage> {
     }
 
     if (messageData.isSeen == true || messageData.messageStatus == "read") {
-      return SvgPicture.asset("assets/blueTick.svg",color: Colors.white,); // read
+      return SvgPicture.asset(
+        "assets/blueTick.svg",
+        color: Colors.white,
+      ); // read
     }
 
     if (messageData.isDelivered == true) {

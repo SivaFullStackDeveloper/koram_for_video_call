@@ -50,7 +50,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
   late DateTime callStartTime;
   late Timer timer;
   bool video = true;
-  bool speaker = false;
+  bool speaker = true;
   bool camerSwitchBack = false;
   late MediaStream _localStream;
   int callDurationInSeconds = 0;
@@ -457,6 +457,8 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
   @override
   Widget build(BuildContext context) {
     widget.isVideoCall == true? !speaker == true:speaker;
+     _localStream.getAudioTracks()[0]
+                                    .enableSpeakerphone(speaker);
     CallSocketService callSocket =
         Provider.of<CallSocketService>(context, listen: true);
     if (callSocket.offerData != null) {
@@ -969,7 +971,7 @@ class _AudioCallingScreenState extends State<AudioCallingScreen> {
                                   ),
                                 ),
                                 child: Center(
-                                    child: widget.isVideoCall&&!speaker
+                                    child: widget.isVideoCall&&speaker
                                         ? SvgPicture.asset(
                                             "assets/speakerLogo.svg")
                                         : Icon(

@@ -459,7 +459,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   ),
                 ),
               ]),
-              Row(
+             widget.isFromHome==false? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
@@ -525,7 +525,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                     ],
                   ),
                 ],
-              ),
+              ):Container(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -600,127 +600,137 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                       child: GestureDetector(
                         onTap: () async {
                           if (_nameController.text == "") {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.red, // Set the background color
-    content: Text(
-      "Please enter Public Name",
-      style: TextStyle(
-        color: Colors.white, // Set the text color
-      ),
-    ),
-  ));
-  return;
-}
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor:
+                                  Colors.red, // Set the background color
+                              content: Text(
+                                "Please enter Public Name",
+                                style: TextStyle(
+                                  color: Colors.white, // Set the text color
+                                ),
+                              ),
+                            ));
+                            return;
+                          }
 
 // validate dob
-if (genderValue == "" || genderValue == null) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.red, // Set the background color
-    content: Text(
-      "Please select a Gender",
-      style: TextStyle(
-        color: Colors.white, // Set the text color
-      ),
-    ),
-  ));
-  return;
-}
+                          if (genderValue == "" || genderValue == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor:
+                                  Colors.red, // Set the background color
+                              content: Text(
+                                "Please select a Gender",
+                                style: TextStyle(
+                                  color: Colors.white, // Set the text color
+                                ),
+                              ),
+                            ));
+                            return;
+                          }
 
-if (!checked) {
-  CommanWidgets().showSnackBar(
-      context,
-      "Please check the box to agree to terms & condition.",
-      Colors.red);
-  return;
-}
+                          if (!checked) {
+                            CommanWidgets().showSnackBar(
+                                context,
+                                "Please check the box to agree to terms & condition.",
+                                Colors.red);
+                            return;
+                          }
 
-setState(() {
-  SendingData = true;
-});
+                          setState(() {
+                            SendingData = true;
+                          });
 
 // Call your ImageUpload class to upload the image only if tempImageFile is not null
-if (tempImageFile != null) {
-  log("inside image not null");
+                          if (tempImageFile != null) {
+                            log("inside image not null");
 
-  // Call the uploadImage method to get the final data
-  var final_data = await ImageUpload().uploadImage(tempImageFile!);
-  
-  // Decode the JSON response
-  final Map<String, dynamic> data = jsonDecode(final_data);
-  final String url = data['url'];
+                            // Call the uploadImage method to get the final data
+                            var final_data =
+                                await ImageUpload().uploadImage(tempImageFile!);
 
-  log("Uploaded Image URL: $url");
+                            // Decode the JSON response
+                            final Map<String, dynamic> data =
+                                jsonDecode(final_data);
+                            final String url = data['url'];
 
-  // Now, save the URL and other data to G.loggedinUser
-  G.loggedinUser = UserDetail(
-    noCodeNumber: G.noCodeNumber.toString(),
-    gender: G.loggedinUser.gender,
-    publicGender: genderValue,
-    privateProfilePicUrl: G.loggedinUser.privateProfilePicUrl,
-    publicProfilePicUrl: url,  // Use the uploaded image URL
-    publicName: _nameController.text,
-    sId: G.loggedinUser.sId ?? "",
-    friendList: [],
-    privateName: G.loggedinUser.privateName,
-    phoneNumber: G.userPhoneNumber,
-    role: G.loggedinUser.role,
-    dateofbirth: G.loggedinUser.dateofbirth,
-    lat: lat,
-    lon: long,
-    story: G.loggedinUser.story,
-  );
+                            log("Uploaded Image URL: $url");
 
-  var res = await userPro.addUser(G.loggedinUser, false);
+                            // Now, save the URL and other data to G.loggedinUser
+                            G.loggedinUser = UserDetail(
+                              noCodeNumber: G.noCodeNumber.toString(),
+                              gender: G.loggedinUser.gender,
+                              publicGender: genderValue,
+                              privateProfilePicUrl:
+                                  G.loggedinUser.privateProfilePicUrl,
+                              publicProfilePicUrl:
+                                  url, // Use the uploaded image URL
+                              publicName: _nameController.text,
+                              sId: G.loggedinUser.sId ?? "",
+                              friendList: [],
+                              privateName: G.loggedinUser.privateName,
+                              phoneNumber: G.userPhoneNumber,
+                              role: G.loggedinUser.role,
+                              dateofbirth: G.loggedinUser.dateofbirth,
+                              lat: lat,
+                              lon: long,
+                              story: G.loggedinUser.story,
+                            );
 
-  if (res == 200) {
-    log("The user added successfully");
-    if (widget.isFromHome) {
-      Navigator.pop(context);
-    } else {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => HomeScreen()));
-    }
-  } else {
-    CommanWidgets().showSnackBar(
-        context,
-        "There was an error, please try again later",
-        Colors.red);
-    return;
-  }
-} else if (tempImageFile == null && widget.isFromHome == true) {
-  G.loggedinUser = UserDetail(
-    noCodeNumber: G.noCodeNumber.toString(),
-    gender: G.loggedinUser.gender,
-    publicGender: genderValue,
-    privateProfilePicUrl: G.loggedinUser.privateProfilePicUrl,
-    publicProfilePicUrl: G.loggedinUser.privateProfilePicUrl,
-    publicName: _nameController.text,
-    sId: G.loggedinUser.sId ?? "",
-    friendList: [],
-    privateName: G.loggedinUser.privateName,
-    phoneNumber: G.userPhoneNumber,
-    role: G.loggedinUser.role,
-    dateofbirth: G.loggedinUser.dateofbirth,
-    lat: lat,
-    lon: long,
-    story: G.loggedinUser.story,
-  );
-  
-  var res = await userPro.addUser(G.loggedinUser, false);
-  log("The response status code for add user without image change: $res");
-}
+                            var res =
+                                await userPro.addUser(G.loggedinUser, false);
 
-setState(() {
-  SendingData = false;
-});
+                            if (res == 200) {
+                              log("The user added successfully");
+                              if (widget.isFromHome) {
+                                Navigator.pop(context);
+                              } else {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                              }
+                            } else {
+                              CommanWidgets().showSnackBar(
+                                  context,
+                                  "There was an error, please try again later",
+                                  Colors.red);
+                              return;
+                            }
+                          } else if (tempImageFile == null &&
+                              widget.isFromHome == true) {
+                            G.loggedinUser = UserDetail(
+                              noCodeNumber: G.noCodeNumber.toString(),
+                              gender: G.loggedinUser.gender,
+                              publicGender: genderValue,
+                              privateProfilePicUrl:
+                                  G.loggedinUser.privateProfilePicUrl,
+                              publicProfilePicUrl:
+                                  G.loggedinUser.privateProfilePicUrl,
+                              publicName: _nameController.text,
+                              sId: G.loggedinUser.sId ?? "",
+                              friendList: [],
+                              privateName: G.loggedinUser.privateName,
+                              phoneNumber: G.userPhoneNumber,
+                              role: G.loggedinUser.role,
+                              dateofbirth: G.loggedinUser.dateofbirth,
+                              lat: lat,
+                              lon: long,
+                              story: G.loggedinUser.story,
+                            );
 
-if (widget.isFromHome) {
-  Navigator.pop(context);
-} else {
-  Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => HomeScreen()));
-}
+                            var res =
+                                await userPro.addUser(G.loggedinUser, false);
+                            log("The response status code for add user without image change: $res");
+                          }
 
+                          setState(() {
+                            SendingData = false;
+                          });
+
+                          if (widget.isFromHome) {
+                            Navigator.pop(context);
+                          } else {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
+                          }
                         },
                         child: Row(
                           children: [

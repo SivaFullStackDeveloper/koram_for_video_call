@@ -617,9 +617,7 @@ class _ChatRoomScreenChatState extends State<ChatRoomScreenChat>
                       decoration: ShapeDecoration(
                         image: theRoomUser.publicProfilePicUrl != ""
                             ? DecorationImage(
-                                image: CachedNetworkImageProvider(G.HOST +
-                                    "api/v1/images/" +
-                                    theRoomUser.publicProfilePicUrl!),
+                                image: CachedNetworkImageProvider(theRoomUser.publicProfilePicUrl!),
                                 // : CachedNetworkImageProvider(G.HOST + "api/v1/images/" + theRoomUser.privateProfilePicUrl!),
                                 fit: BoxFit.fill,
                               )

@@ -53,7 +53,7 @@ class CommanWidgets {
             color: Colors.transparent,
           ),
         ),
-        imageUrl: G.HOST + "api/v1/images/" + imageUrl,
+        imageUrl: imageUrl,
       ),
     );
   }

@@ -123,7 +123,7 @@ class CallSocketService extends ChangeNotifier {
           "callerName":G.loggedinUser.publicName,
           "callerNo": G.userPhoneNumber,
           "callType": callType,
-          "receiver_profile_pic_url": G.HOST + "api/v1/images/" + ReceiverURl,
+          "receiver_profile_pic_url":  ReceiverURl,
           "receipientFireToken": responseOfGettoken
         }));
       }
@@ -216,7 +216,7 @@ void sendLeave(String USerNumber,String OtherUsernumber)async{
       "receiverName":receiverName,
       "offer":sessionSdp,
       "callType": "Audio",
-      "caller_profile_pic_url": G.HOST + "api/v1/images/" + Url,
+      "caller_profile_pic_url":  Url,
       "receipientFireToken": Token
     }));
   }
